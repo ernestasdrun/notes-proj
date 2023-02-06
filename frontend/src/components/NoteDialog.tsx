@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Slide, Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormGroup, Typography, useTheme, useMediaQuery, IconButton } from '@mui/material';
+import { Box, Slide, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography, useTheme, useMediaQuery, IconButton } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import { styled } from '@mui/system';
 import { FormControl } from '@mui/material';
@@ -18,23 +18,6 @@ const Transition = React.forwardRef(function Transition(
 ) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-
-/*const StyledDialog = styled(Dialog)(({ theme }) => ({
-    animation: "tilt-in-fwd-tr 0.5s cubic-bezier(0.390, 0.575, 0.565, 1.000)",
-
-    "@keyframes tilt-in-fwd-tr": {
-        "0%": {
-            transform: "rotateY(20deg) rotateX(35deg) translate(300px, -300px) skew(-35deg, 10deg)",
-            opacity: "0",
-        },
-        "100%": {
-            transform: "rotateY(0) rotateX(0deg) translate(0, 0) skew(0deg, 0deg)",
-            opacity: "1",
-        }
-    }
-
-
-}));*/
 
 const StyledBox = styled(Box)(({ theme }) => ({
     width: useMediaQuery('(max-width: 700px)') ? "270px" : "600px",

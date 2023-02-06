@@ -35,9 +35,9 @@ export const themeSettings = (mode: PaletteMode) => {
                 : {
                     // palette values for light mode
                     primary: {
-                        dark: "#215651",
-                        main: "#427b75",
-                        light: "#63a29c",
+                        dark: "#2d6e68",
+                        main: "#5d9993",
+                        light: "#77bdb6",
                     },
                     secondary: {
                         dark: "#29808c",
@@ -59,6 +59,16 @@ export const themeSettings = (mode: PaletteMode) => {
                         paper: "#ceceac",
                     },
                 }),
+        },
+        breakpoints: {
+            values: {
+                xs: 0,
+                mobile: 400,
+                sm: 600,
+                md: 900,
+                lg: 1200,
+                xl: 1536,
+            }
         },
         typography: {
             fontFamily: ["Rubik", "sans-serif"].join(","),

@@ -1,49 +1,27 @@
 import React from 'react';
-import { Card, CardContent, CardActions, Typography, Box, Divider, useTheme, dividerClasses, DividerProps, Button, IconButton, useMediaQuery, Tooltip } from '@mui/material';
+import { Card, CardContent, Typography, Box, Divider, IconButton, useMediaQuery, Tooltip } from '@mui/material';
 import { Note as NoteModel } from '../models/note';
 import { styled } from '@mui/system';
 import { formatDate } from '../utils/formatDate';
 import DeleteIcon from '@mui/icons-material/Delete';
-/*
-const StyledCard = styled(Card)(({ theme }) => ({
-    minWidth: "200px",
-    maxWidth: "400px",
-    height: "200px",
-    borderRadius: "3%",
-    ":hover": {
-        boxShadow: theme.palette.mode === "dark" ? "0 0 11px #e4e2e233" : "0 0 11px #03030333",
-        cursor: "pointer",
-    },
-    "& .MuiCardContent-root": {
-        padding: 5,
-        "& 	.MuiTypography-root": {
-            padding: 0
-        },
-        "& .MuiTypography-h4": {
-            
-        },
-        "& .MuiTypography-body2": {
-            whiteSpace: "pre-line",
-        },
-        "& .MuiTypography-caption": {
-            
-        },
-        "& .MuiDivider-root": {
-            //background: "red",
-            marginBottom: "7px"
-        }
-    },
-}));
-*/
+
 const StyledCard = styled(Card, {
     shouldForwardProp: (prop) => prop !== "screenSize",
 })<{ screenSize?: boolean }>(({ theme, screenSize }) => ({
-    minWidth: "250px",
-    width: screenSize ? "300px" : "auto",
+    width: screenSize ? "90vw" : "auto",
     height: "200px",
     borderRadius: "3%",
+    transitionProperty: "box-shadow, transform",
+    transitionDuration: "350ms",
+    transitionTimingFunction: "ease",
+    ":focus-visible": {
+        outline: `4px solid ${theme.palette.secondary.main}`,
+        transform: "translateY(-8px)",
+        boxShadow: "0px 8px 10px 1px rgba(0, 0, 0, 0.2)",
+    },
     ":hover": {
-        boxShadow: theme.palette.mode === "dark" ? "0 0 11px #e4e2e233" : "0 0 11px #03030333",
+        transform: "translateY(-8px)",
+        boxShadow: "0px 8px 10px 1px rgba(0, 0, 0, 0.2)",
         cursor: "pointer",
     },
     "& .MuiCardContent-root": {
@@ -60,10 +38,9 @@ const StyledCard = styled(Card, {
             overflowWrap: "break-word",
         },
         "& .MuiTypography-caption": {
-
+            
         },
         "& .MuiDivider-root": {
-            //background: "red",
             marginBottom: "7px"
         }
     },
@@ -95,11 +72,11 @@ const Note = ({ note, onNoteClicked, onDeleteNote }: INoteProps) => {
     }
 
     return (
-        <StyledCard screenSize={smallScreen} onClick={() => onNoteClicked(note)}>
+        <StyledCard screenSize={smallScreen} onClick={() => onNoteClicked(note)} tabIndex={0}>
             <CardContent>
                 <Box display="flex" justifyContent="space-between" alignItems="center" p="4px 8px 4px 8px">
                     <Box width="85%" maxHeight="28px" sx={{ maskImage: "linear-gradient(90deg, #000 90%, transparent)" }}>
-                        <Typography variant="h4" >
+                        <Typography variant="h4">
                             {title}
                         </Typography>
                     </Box>

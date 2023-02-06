@@ -156,22 +156,56 @@ export default Navbar;
 
 
 import React from 'react';
-import { AppBar, Box, Button, IconButton, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Icon, IconButton, Toolbar, Tooltip, Typography, useTheme } from '@mui/material';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import { useDispatch } from 'react-redux';
+import { setMode } from '../state';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import GithubDarkModeImage from '../assets/github-mark-white.svg';
+import GithubLightModeImage from '../assets/github-mark.svg';
 
 const Navbar = () => {
-  return (
-    <AppBar color="primary" enableColorOnDark={true} position="fixed">
-        <Toolbar variant="regular" disableGutters={false}>
-            <Typography variant="h3">ClassicNotes</Typography>
-            <Box sx={{ flexGrow: 1}} />
-            <Box sx={{ display: {xs: "none", sm: "flex"} }}>
-                <IconButton>
-                    
-                </IconButton>
-            </Box>
-        </Toolbar>
-    </AppBar>
-  )
+    const theme = useTheme();
+    const dispatch = useDispatch();
+
+    return (
+        <AppBar color="primary" enableColorOnDark={true} position="fixed">
+            <Toolbar variant="regular">
+                <Typography variant="h3" sx={{ cursor: "pointer" }}>ClassicNotes</Typography>
+                <Box sx={{ flexGrow: 1 }} />
+                <Box sx={{ display: { xs: "flex", sm: "flex" } }}>
+                    <Tooltip title="Github repository">
+                        <IconButton onClick={() => window.open("https://github.com/ernestasdrun/notes-proj", "_blank")}>
+                            <Icon style={{ fontSize: "30px" }}>
+                                <img
+                                    src={theme.palette.mode === "dark"
+                                        ? GithubDarkModeImage
+                                        : GithubLightModeImage}
+                                    height={30}
+                                    width={30}
+                                />
+                            </Icon>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Change theme">
+                        <IconButton onClick={() => dispatch(setMode())}>
+                            {theme.palette.mode === "dark" ? (
+                                <DarkModeOutlinedIcon sx={{ fontSize: "30px" }} />
+                            ) : (
+                                <LightModeIcon sx={{ color: "#24292f", fontSize: "30px" }} />
+                            )}
+                        </IconButton>
+                    </Tooltip>
+                </Box>
+                <Box sx={{ display: { xs: "flex", sm: "none" } }}>
+                    <IconButton>
+                        <MenuRoundedIcon sx={{ color: "#24292f", fontSize: "30px" }} />
+                    </IconButton>
+                </Box>
+            </Toolbar>
+        </AppBar>
+    )
 }
 
 export default Navbar;
