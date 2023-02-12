@@ -7,7 +7,11 @@ import { PaletteMode } from "@mui/material";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import HomePage from './scenes/homePage/HomePage';
-import Navbar from './components/Navbar';
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import LoginPage from './scenes/loginPage/LoginPage';
+import UserHomePage from './scenes/userHomePage/UserHomePage';
+import SignUpPage from './scenes/signUpPage/SignUpPage';
+import RemindPasswordPage from './scenes/remindPasswordPage/RemindPasswordPage';
 
 interface RootStateMode {
   mode: PaletteMode;
@@ -21,7 +25,15 @@ function App() {
     <div>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <HomePage />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />}/>
+            <Route path="/login" element={<LoginPage />}/>
+            <Route path="/signup" element={<SignUpPage />}/>
+            <Route path="/reset" element={<RemindPasswordPage />}/>
+            <Route path="/home" element={<UserHomePage />}/>
+          </Routes>
+        </BrowserRouter>
       </ThemeProvider>
     </div>
   );

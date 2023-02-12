@@ -4,7 +4,7 @@ import { styled } from '@mui/system';
 
 const StyledBox = styled(Box, {
     shouldForwardProp: (prop) => prop !== "screenSize",
-  })<{ screenSize?: boolean }>(({ theme, screenSize }) => ({
+})<{ screenSize?: boolean }>(({ theme, screenSize }) => ({
     minWidth: "250px",
     width: screenSize ? "300px" : "auto",
     height: "200px",
@@ -31,7 +31,7 @@ const StyledBox = styled(Box, {
         fontSize: "44px",
     },
 
-  }));
+}));
 
 
 interface INoteTemplateProps {
@@ -41,8 +41,22 @@ interface INoteTemplateProps {
 const NewNoteTemplate = ({ onTemplateClicked }: INoteTemplateProps) => {
     const smallScreen = useMediaQuery('(max-width:599px)');
 
+    const handleKeyDown = (e: React.KeyboardEvent): void => {
+        if (e.code === "Enter") {
+            onTemplateClicked(true);
+        }
+    }
+
     return (
-        <StyledBox tabIndex={0} display="flex" justifyContent="center" alignItems="center" screenSize={smallScreen} onClick={() => onTemplateClicked(true)}>
+        <StyledBox
+            tabIndex={0}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            screenSize={smallScreen}
+            onClick={() => onTemplateClicked(true)}
+            onKeyDown={(e) => handleKeyDown(e)}
+        >
             <Typography variant="h3">
                 + New Note
             </Typography>

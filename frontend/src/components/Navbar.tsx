@@ -155,7 +155,7 @@ export default Navbar;
 */
 
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { AppBar, Box, Icon, IconButton, Toolbar, Tooltip, Typography, useTheme } from '@mui/material';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
@@ -170,7 +170,7 @@ const Navbar = () => {
     const dispatch = useDispatch();
 
     return (
-        <AppBar color="primary" enableColorOnDark={true} position="fixed">
+        <AppBar color="primary" enableColorOnDark={true} position="sticky">
             <Toolbar variant="regular">
                 <Typography variant="h3" sx={{ cursor: "pointer" }}>ClassicNotes</Typography>
                 <Box sx={{ flexGrow: 1 }} />

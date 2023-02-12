@@ -1,14 +1,12 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, Divider, IconButton, useMediaQuery, Tooltip } from '@mui/material';
+import { Card, CardContent, Typography, Box, Divider, useMediaQuery } from '@mui/material';
 import { Note as NoteModel } from '../models/note';
 import { styled } from '@mui/system';
 import { formatDate } from '../utils/formatDate';
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteButton from './buttons/DeleteButton';
 
-const StyledCard = styled(Card, {
-    shouldForwardProp: (prop) => prop !== "screenSize",
-})<{ screenSize?: boolean }>(({ theme, screenSize }) => ({
-    width: screenSize ? "90vw" : "auto",
+const StyledCard = styled(Card)<{ screen: boolean }>(({ theme, screen }) => ({
+    width: screen ? "90vw" : "auto",
     height: "200px",
     borderRadius: "3%",
     transitionProperty: "box-shadow, transform",
@@ -21,7 +19,7 @@ const StyledCard = styled(Card, {
     },
     ":hover": {
         transform: "translateY(-8px)",
-        boxShadow: "0px 8px 10px 1px rgba(0, 0, 0, 0.2)",
+        boxShadow: "0px 1px 10px 1px rgba(0, 0, 0, 0.2)",
         cursor: "pointer",
     },
     "& .MuiCardContent-root": {
@@ -37,11 +35,8 @@ const StyledCard = styled(Card, {
             whiteSpace: "pre-line",
             overflowWrap: "break-word",
         },
-        "& .MuiTypography-caption": {
-            
-        },
         "& .MuiDivider-root": {
-            marginBottom: "7px"
+            marginBottom: "5px"
         }
     },
 }));
@@ -71,8 +66,14 @@ const Note = ({ note, onNoteClicked, onDeleteNote }: INoteProps) => {
         createdUpdatedText = "Created: " + formatDate(updatedAt);
     }
 
+    const handleKeyDown = (e: React.KeyboardEvent): void => {
+        if (e.code === "Enter") {
+            onNoteClicked(note);
+        }
+    }
+
     return (
-        <StyledCard screenSize={smallScreen} onClick={() => onNoteClicked(note)} tabIndex={0}>
+        <StyledCard screen={smallScreen} onKeyDown={(e) => handleKeyDown(e)} onClick={() => onNoteClicked(note)} tabIndex={0}>
             <CardContent>
                 <Box display="flex" justifyContent="space-between" alignItems="center" p="4px 8px 4px 8px">
                     <Box width="85%" maxHeight="28px" sx={{ maskImage: "linear-gradient(90deg, #000 90%, transparent)" }}>
@@ -80,14 +81,7 @@ const Note = ({ note, onNoteClicked, onDeleteNote }: INoteProps) => {
                             {title}
                         </Typography>
                     </Box>
-                    <Tooltip arrow disableInteractive title="Delete" placement="top" enterDelay={500}>
-                        <IconButton onClick={(e) => {
-                            onDeleteNote(note);
-                            e.stopPropagation();
-                        }}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
+                    <DeleteButton size="medium" note={note} onDeleteNote={onDeleteNote}/>
                 </Box>
                 <Divider />
                 <Box height="110px" px="8px" sx={{ overflowY: "hidden", maskImage: "linear-gradient(180deg, #000 60%, transparent)" }}>
