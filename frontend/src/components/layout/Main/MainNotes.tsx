@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Note } from '../../models/note';
-import NoteComponent from '../../components/Note';
+import { Note } from '../../../models/note';
+import NoteComponent from '../../Note';
 import Box from '@mui/material/Box';
-import { Fab, Grid, useMediaQuery } from '@mui/material';
-import * as NotesApi from '../../network/notes_api';
-import NoteDialog from '../../components/NoteDialog';
-import { Note as NoteModel } from '../../models/note';
-import Navbar from '../../components/Navbar';
-import NewNoteTemplate from '../../components/NewNoteTemplate';
-import LoadingState from '../../components/LoadingState';
+import { Fab, Grid, Stack, useMediaQuery } from '@mui/material';
+import * as NotesApi from '../../../network/notes_api';
+import NoteDialog from '../../NoteDialog';
+import { Note as NoteModel } from '../../../models/note';
+import Navbar from '../../Navbar';
+import NewNoteTemplate from '../../NewNoteTemplate';
+import LoadingState from '../../LoadingState';
 import AddIcon from '@mui/icons-material/Add';
-import SignUpModal from '../../components/SignUpModal';
-import Footer from '../../components/layout/Footer';
+import SignUpModal from '../../SignUpModal';
+import NoteOptions from './NoteOptions';
+import SearchBar from './optionComponents/SearchBar';
 
-const HomePage = () => {
-
+const MainNotes = () => {
   const smallScreen = useMediaQuery('(max-width:600px)');
 
   const [notes, setNotes] = useState<Note[]>([]);
@@ -62,20 +62,20 @@ const HomePage = () => {
           {
             index == 0 && !smallScreen &&
             <Grid item xs={12} sm={6} md={4} lg={4} xl={3}>
-              <NewNoteTemplate onTemplateClicked={setAddNoteDialog}/>
+              <NewNoteTemplate onTemplateClicked={setAddNoteDialog} />
             </Grid>
           }
           <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={note._id}>
-            <NoteComponent note={note} onNoteClicked={setNoteEdit} onDeleteNote={deleteNote} />
+            <NoteComponent note={note} onNoteClicked={setNoteEdit} onDeleteNote={deleteNote} key={note._id} />
           </Grid>
         </React.Fragment>
       ))}
     </Grid>
 
   return (
-    <Box minHeight="100vh" maxHeight="auto" border="1px solid red">
-      <Navbar />
-      <Box m={{ xs: "8rem 1rem 2rem 1rem", sm: "8rem 2rem 2rem 2rem", md: "8rem 3rem 2rem 3rem", lg: "8rem 8rem 2rem 8rem", xl: "8rem 10rem 2rem 10rem" }}>
+    <Box padding="10px 10px 0 10px">
+      <NoteOptions />
+      <Box m={{ xs: "2rem 1rem 2rem 1rem", sm: "2rem 2rem 2rem 2rem", md: "2rem 3rem 2rem 3rem", lg: "2rem 8rem 2rem 8rem", xl: "2rem 10rem 2rem 10rem" }}>
         {notesLoading && <LoadingState />}
         {showNotesLoadingError && <p>Something went wrong. Please refresh the page.</p>}
         {!notesLoading && !showNotesLoadingError &&
@@ -116,15 +116,8 @@ const HomePage = () => {
           <AddIcon />
         </Fab>
       }
-      { true &&
-        <SignUpModal
-          onDismiss={() => {}}
-          onSignUpSuccessful={() => {}}
-          />
-      }
-      <Footer />
     </Box>
   )
 }
 
-export default HomePage
+export default MainNotes;

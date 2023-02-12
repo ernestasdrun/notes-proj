@@ -1,5 +1,5 @@
-import React from 'react'
-import { Box, Slide, Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormGroup, Typography, useTheme, useMediaQuery, IconButton } from '@mui/material';
+import React from 'react';
+import { Divider, Slide, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, useMediaQuery, IconButton } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import { styled } from '@mui/system';
 import { FormControl } from '@mui/material';
@@ -8,7 +8,9 @@ import { useForm } from 'react-hook-form';
 import { INoteInput } from '../network/notes_api';
 import * as NotesApi from '../network/notes_api';
 import CloseIcon from '@mui/icons-material/Close';
-import { ErrorMessage } from "@hookform/error-message";
+import TextInputField from './form/TextInputField';
+import FormButton from './form/FormButton';
+import CloseButton from './buttons/CloseButton';
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -19,28 +21,6 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-/*const StyledDialog = styled(Dialog)(({ theme }) => ({
-    animation: "tilt-in-fwd-tr 0.5s cubic-bezier(0.390, 0.575, 0.565, 1.000)",
-
-    "@keyframes tilt-in-fwd-tr": {
-        "0%": {
-            transform: "rotateY(20deg) rotateX(35deg) translate(300px, -300px) skew(-35deg, 10deg)",
-            opacity: "0",
-        },
-        "100%": {
-            transform: "rotateY(0) rotateX(0deg) translate(0, 0) skew(0deg, 0deg)",
-            opacity: "1",
-        }
-    }
-
-
-}));*/
-
-const StyledBox = styled(Box)(({ theme }) => ({
-    width: useMediaQuery('(max-width: 700px)') ? "270px" : "600px",
-    maxHeight: "600px",
-}));
-
 interface IAddNoteDialogProps {
     open?: boolean,
     noteToEdit?: Note,
@@ -49,8 +29,7 @@ interface IAddNoteDialogProps {
 }
 
 const NoteDialog = ({ open = true, noteToEdit, onDismiss, onNoteSaved }: IAddNoteDialogProps) => {
-    const theme = useTheme();
-    //const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<INoteInput>({
         defaultValues: {
             title: noteToEdit?.title || "",
@@ -74,47 +53,66 @@ const NoteDialog = ({ open = true, noteToEdit, onDismiss, onNoteSaved }: IAddNot
         }
     }
 
+    const handleKeyDown = (e: React.KeyboardEvent): void => {
+        if (e.code === "Escape") {
+            onDismiss();
+        }
+    }
+
     return (
         <Dialog
-            //fullScreen={fullScreen}
             open={open}
             TransitionComponent={Transition}
             keepMounted
-            onClose={() => console.log("testas")}
             aria-describedby="alert-dialog-slide-description"
+            onKeyDown={(e) => handleKeyDown(e)}
             sx={{
                 backgroundColor: 'transparent',
                 boxShadow: 'none',
             }}
+            maxWidth={false}
+            PaperProps={{
+                sx: {
+                    width: "75vw",
+                    minWidth: "300px",
+                }
+            }}
         >
-            <StyledBox>
-                <DialogTitle display="flex" justifyContent="space-between" variant="h3">
+                <DialogTitle display="flex" justifyContent="space-between" variant="h3" fontWeight={500} >
                     {noteToEdit ? "Edit note" : "Add note"}
-                    <IconButton sx={{ margin: "-15px -20px 0px 0px" }} onClick={onDismiss}>
-                        <CloseIcon fontSize="large" />
-                    </IconButton>
+                    <CloseButton size="large" sx={{ margin: "-15px -20px 0px 0px" }} onClick={onDismiss} />
                 </DialogTitle>
+                <Divider />
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <DialogContent>
                         <FormControl variant="standard" fullWidth>
-                            <Typography variant="h5">Title</Typography>
-                            <TextField inputProps={{ maxLength: 50 }} error={!!errors.title} placeholder="Title" size="small" {...register("title", { required: "Required" })} />
-                            <ErrorMessage
-                                errors={errors}
+                            <TextInputField
+                                label="Title"
                                 name="title"
-                                render={({ message }) => <p style={{ color: theme.palette.error.main, fontWeight: 500 }}>{message}</p>}
+                                inputProps={{ maxLength: 50 }}
+                                size="small"
+                                error={errors.title}
+                                register={register}
+                                registerOptions={{ required: "Required" }}
+                                sx={{ pb: 3 }}
                             />
-                            <Typography variant="h5" pt="1rem">Text</Typography>
-                            <TextField inputProps={{ maxLength: 100000 }} rows={16} multiline placeholder="Type text here..." {...register("text")} />
+                            <TextInputField
+                                label="Text"
+                                name="text"
+                                rows={16}
+                                multiline
+                                inputProps={{ maxLength: 100000 }}
+                                register={register}
+                            />
                         </FormControl>
                     </DialogContent>
                     <DialogActions>
-                        <Button type="submit" variant="contained" disabled={isSubmitting}>
-                            {noteToEdit ? "SAVE CHANGES" : "CREATE NOTE"}
-                        </Button>
+                        <FormButton
+                            label={noteToEdit ? "SAVE CHANGES" : "CREATE NOTE"}
+                            isDisabled={isSubmitting}
+                        />
                     </DialogActions>
                 </form>
-            </StyledBox>
         </Dialog>
     )
 }

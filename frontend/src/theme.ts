@@ -18,14 +18,19 @@ export const themeSettings = (mode: PaletteMode) => {
                         light: "#38939c",
                     },
                     neutral: {
-                        dark: "#000",
+                        dark: "#1d2525",
                         main: "#000",
                         mediumMain: "#000",
                         medium: "#000",
                         light: "#000",
+                        red: "#ec6060",
                     },
                     border: {
                         main: "#ffffff",
+                    },
+                    search: {
+                        background: "#4e4d4d",
+                        border: "#ffffff",
                     },
                     background: {
                         default: "#303030",
@@ -35,9 +40,9 @@ export const themeSettings = (mode: PaletteMode) => {
                 : {
                     // palette values for light mode
                     primary: {
-                        dark: "#215651",
-                        main: "#427b75",
-                        light: "#63a29c",
+                        dark: "#2d6e68",
+                        main: "#5d9993",
+                        light: "#77bdb6",
                     },
                     secondary: {
                         dark: "#29808c",
@@ -45,14 +50,19 @@ export const themeSettings = (mode: PaletteMode) => {
                         light: "#7ecfda",
                     },
                     neutral: {
-                        dark: "#ffffff",
+                        dark: "#214441",
                         main: "#000",
                         mediumMain: "#000",
                         medium: "#000",
                         light: "#000",
+                        red: "#7a2828",
                     },
                     border: {
                         main: "#000000",
+                    },
+                    search: {
+                        background: "#ffffff",
+                        border: "#5d9993",
                     },
                     background: {
                         default: "#e8e8de",
@@ -60,33 +70,46 @@ export const themeSettings = (mode: PaletteMode) => {
                     },
                 }),
         },
+        breakpoints: {
+            values: {
+                xs: 0,
+                mobile: 400,
+                sm: 600,
+                md: 900,
+                lg: 1200,
+                xl: 1536,
+            }
+        },
         typography: {
             fontFamily: ["Rubik", "sans-serif"].join(","),
-            fontSize: 12,
             h1: {
                 fontFamily: ["Rubik", "sans-serif"].join(","),
-                fontSize: 40,
+                fontSize: "3em",
             },
             h2: {
                 fontFamily: ["Rubik", "sans-serif"].join(","),
-                fontSize: 32,
+                fontSize: "2.2em",
             },
             h3: {
                 fontFamily: ["Rubik", "sans-serif"].join(","),
-                fontSize: 24,
+                fontSize: "1.8em",
             },
             h4: {
                 fontFamily: ["Rubik", "sans-serif"].join(","),
-                fontSize: 20,
+                fontSize: "1.5em",
             },
             h5: {
                 fontFamily: ["Rubik", "sans-serif"].join(","),
-                fontSize: 16,
+                fontSize: "1em",
             },
             h6: {
                 fontFamily: ["Rubik", "sans-serif"].join(","),
-                fontSize: 14,
+                fontSize: "0.7em",
             },
+            body2: {
+                fontFamily: ["Rubik", "sans-serif"].join(","),
+                fontSize: "0.9em",
+            }
         },
     };
 };
