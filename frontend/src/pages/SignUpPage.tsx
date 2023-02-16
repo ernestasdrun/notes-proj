@@ -1,28 +1,31 @@
-import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, styled, TextField, Typography } from '@mui/material';
+import { FormControl, IconButton, InputAdornment, OutlinedInput, Stack, styled, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React, { useRef, useState, useEffect } from 'react';
-import TextInputField from '../../components/form/TextInputField';
-import Footer from '../../components/layout/Footer';
-import Navbar from '../../components/Navbar';
+import React, { useState, useEffect } from 'react';
+import TextInputField from '../components/form/TextInputField';
+import Footer from '../features/footer/Footer';
+import Navbar from '../features/navbar/Navbar';
 import { useForm } from 'react-hook-form';
-import { LoginCredentials } from '../../network/users_api';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import FormButton from '../../components/form/FormButton';
-import * as UserApi from '../../network/users_api';
+import FormButton from '../components/form/FormButton';
+import * as UserApi from '../network/users_api';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import NavigationLink from '../../components/links/NavigationLink';
+import NavigationLink from '../components/links/NavigationLink';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../state/mode';
 
 const SignUpPage = () => {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<UserApi.SignUpCredentials>({
+  const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<UserApi.SignUpCredentials>({
     defaultValues: {
       username: "",
       email: "",
       password: "",
+      passwordConfirm: "",
     }
   });
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -32,11 +35,19 @@ const SignUpPage = () => {
     e.preventDefault();
   };
 
-  async function onSubmit(input: LoginCredentials) {
+
+  async function onSubmit(input: UserApi.SignUpCredentials) {
     try {
-      const user = await UserApi.login(input).then((user) => { console.log(user) });
-      //TODO add user logic to sav ein redux etc...
-      navigate("/test");
+      if (input.password === input.passwordConfirm) {
+        delete input["passwordConfirm"];
+        await UserApi.signUp(input).then((user) => dispatch(setUser(user)));
+        navigate("/home");
+      } else {
+        setError("passwordConfirm", {
+          type: "manual",
+          message: "Passwords do not match"
+        });
+      }
     } catch (error) {
       console.error(error);
       alert(error);
@@ -46,11 +57,13 @@ const SignUpPage = () => {
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar />
-      <Stack alignItems="center" direction="column" flexGrow={1}>
-        <Typography variant="h2" p="5rem 2rem 2.5rem 3rem">Welcome, please Sign Up here</Typography>
+      <Stack alignItems="center" direction="column" flexGrow={1} textAlign="center">
+        <Typography variant="h1" fontSize="2.5rem" p="8vh 2rem 2.5rem 3rem">Welcome, please Sign Up here</Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack flexDirection="column" alignItems="center">
             <TextInputField
+              isFullWidth={false}
+              variant="outlined"
               type="text"
               name="username"
               label="Username"
@@ -60,6 +73,8 @@ const SignUpPage = () => {
               error={errors.username}
             />
             <TextInputField
+              isFullWidth={false}
+              variant="outlined"
               type="email"
               name="email"
               label="Email"
@@ -69,6 +84,8 @@ const SignUpPage = () => {
               error={errors.email}
             />
             <TextInputField
+              isFullWidth={false}
+              variant="outlined"
               type={showPassword ? "text" : "password"}
               name="password"
               label="Password"
@@ -89,10 +106,22 @@ const SignUpPage = () => {
                 </InputAdornment>
               }
             />
-            <FormButton label="SIGN UP" isDisabled={isSubmitting} sx={{ marginTop: "1rem", width: "140px" }} />
+            <TextInputField
+              isFullWidth={false}
+              variant="outlined"
+              type="password"
+              name="passwordConfirm"
+              label="Confirm password"
+              size="small"
+              register={register}
+              registerOptions={{ required: "Required" }}
+              error={errors.passwordConfirm}
+              errMessage={errors?.passwordConfirm?.message}
+            />
+            <FormButton label="SIGN UP" isDisabled={isSubmitting} sx={{ marginTop: "2rem", width: "140px" }} />
           </Stack>
         </form>
-        <Typography variant="body1" pt={4}>Already have account?&nbsp;
+        <Typography variant="body1" mt="5vh">Already have account?&nbsp;
           <NavigationLink title="login" to="/login" text="Sign In" />
         </Typography>
       </Stack>

@@ -2,7 +2,9 @@ import { User } from "../models/user";
 import { fetchData } from "./fetchData";
 
 export async function getLoggedInUser(): Promise<User> {
-    const response = await fetchData(`http://localhost:5001/api/users`, { method: "GET" });
+    const response = await fetchData(`http://127.0.0.1:5001/api/users`, { 
+        method: "GET",
+    });
     return response.json();
 }
 
@@ -10,10 +12,11 @@ export interface SignUpCredentials {
     username: string,
     email: string,
     password: string,
+    passwordConfirm?: string,
 }
 
 export async function signUp(credentials: SignUpCredentials): Promise<User> {
-    const response = await fetchData(`http://localhost:5001/api/users/signup`, {
+    const response = await fetchData(`http://127.0.0.1:5001/api/users/signup`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -29,7 +32,7 @@ export interface LoginCredentials {
 }
 
 export async function login(credentials: LoginCredentials): Promise<User> {
-    const response = await fetchData(`http://localhost:5001/api/users/login`, {
+    const response = await fetchData(`http://127.0.0.1:5001/api/users/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -40,5 +43,7 @@ export async function login(credentials: LoginCredentials): Promise<User> {
 }
 
 export async function logout() {
-    await fetchData(`http://localhost:5001/api/users/logout`, { method: "POST"})
+    await fetchData(`http://127.0.0.1:5001/api/users/logout`, { 
+        method: "POST",
+    })
 }

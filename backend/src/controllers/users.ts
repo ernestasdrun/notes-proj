@@ -11,7 +11,7 @@ export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
             throw createHttpError(401, "User not authenticated");
         }
 
-        const user = await UserModel.findById(authenticatedUser).select("+email").exec();
+        const user = await UserModel.findById(authenticatedUser).select(["+email", "-__v", "-createdAt", "-updatedAt"]).exec();
         res.status(200).json(user);
     } catch (error) {
         next(error);
@@ -56,7 +56,11 @@ export const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = asy
 
         req.session.userId = newUser._id;
 
-        res.status(201).json(newUser);
+        res.status(201).json({
+            "_id": newUser._id,
+            "userName": newUser.userName,
+            "email": newUser.email,
+        });
     } catch (error) {
         next(error);
     }
@@ -89,7 +93,11 @@ export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async
         }
 
         req.session.userId = user._id;
-        res.status(201).json(user);
+        res.status(201).json({
+            "_id": user._id,
+            "userName": user.userName,
+            "email": user.email,
+        });
     } catch (error) {
         next(error);
     }

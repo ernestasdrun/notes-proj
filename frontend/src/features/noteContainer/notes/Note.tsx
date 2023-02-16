@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card, CardContent, Typography, Box, Divider, useMediaQuery } from '@mui/material';
-import { Note as NoteModel } from '../models/note';
+import { Note as NoteModel } from '../../../models/note';
 import { styled } from '@mui/system';
-import { formatDate } from '../utils/formatDate';
-import DeleteButton from './buttons/DeleteButton';
+import { formatDate } from '../../../utils/formatDate';
+import DeleteButton from '../../../components/buttons/DeleteButton';
 
 const StyledCard = styled(Card)<{ screen: boolean }>(({ theme, screen }) => ({
     width: screen ? "90vw" : "auto",

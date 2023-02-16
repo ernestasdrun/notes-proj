@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.scss';
-import modeReducer from "./state";
+import modeReducer from "./state/mode";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from 'react-redux';
 import {

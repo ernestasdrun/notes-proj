@@ -2,16 +2,16 @@ import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import { createTheme } from "@mui/material/styles";
-import { themeSettings } from './theme';
+import { themeSettings } from './styles/theme';
 import { PaletteMode } from "@mui/material";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import HomePage from './scenes/homePage/HomePage';
+import HomePage from './pages/HomePage';
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import LoginPage from './scenes/loginPage/LoginPage';
-import UserHomePage from './scenes/userHomePage/UserHomePage';
-import SignUpPage from './scenes/signUpPage/SignUpPage';
-import RemindPasswordPage from './scenes/remindPasswordPage/RemindPasswordPage';
+import LoginPage from './pages/LoginPage';
+import UserHomePage from './pages/UserHomePage';
+import SignUpPage from './pages/SignUpPage';
+import RemindPasswordPage from './pages/RemindPasswordPage';
 
 interface RootStateMode {
   mode: PaletteMode;

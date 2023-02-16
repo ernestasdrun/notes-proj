@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Note } from '../../models/note';
-import NoteComponent from '../../components/Note';
+import { Note } from '../models/note';
+import NoteComponent from '../features/noteContainer/notes/Note';
 import Box from '@mui/material/Box';
 import { Fab, Grid, useMediaQuery } from '@mui/material';
-import * as NotesApi from '../../network/notes_api';
-import NoteDialog from '../../components/NoteDialog';
-import { Note as NoteModel } from '../../models/note';
-import Navbar from '../../components/Navbar';
-import NewNoteTemplate from '../../components/NewNoteTemplate';
-import LoadingState from '../../components/LoadingState';
+import * as NotesApi from '../network/notes_api';
+import NoteDialog from '../features/noteContainer/editDialog/NoteDialog';
+import { Note as NoteModel } from '../models/note';
+import Navbar from '../features/navbar/Navbar';
+import NewNoteTemplate from '../features/noteContainer/notes/NewNoteTemplate';
+import LoadingState from '../components/loading/LoadingState';
 import AddIcon from '@mui/icons-material/Add';
-import SignUpModal from '../../components/SignUpModal';
-import Footer from '../../components/layout/Footer';
+import Footer from '../features/footer/Footer';
 
 const HomePage = () => {
 
@@ -115,12 +114,6 @@ const HomePage = () => {
           sx={{ position: "fixed", right: 20, bottom: 20, }}>
           <AddIcon />
         </Fab>
-      }
-      { true &&
-        <SignUpModal
-          onDismiss={() => {}}
-          onSignUpSuccessful={() => {}}
-          />
       }
       <Footer />
     </Box>

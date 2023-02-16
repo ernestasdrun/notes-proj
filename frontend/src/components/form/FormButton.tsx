@@ -11,24 +11,31 @@ interface FormButtonProps {
 
 const StyledFormButton = styled(Button)(({ theme }) => ({
     borderRadius: "8px",
-    transitionProperty: "box-shadow, transform",
+    transitionProperty: "box-shadow, transform, background-color",
     transitionDuration: "200ms",
     transitionTimingFunction: "ease",
     ":hover": {
         boxShadow: "0px 6px 10px 0px rgba(0, 0, 0, 0.5)",
         transform: "translateY(-1px)",
+        backgroundColor: theme.palette.button.light,
     },
     ":active": {
         boxShadow: "none",
         transform: "translateY(1px)",
-        backgroundColor: theme.palette.neutral.dark,
+        backgroundColor: theme.palette.button.dark,
     },
     ":focus-visible": {
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette.button.light,
         outline: `3px solid ${theme.palette.border.main}`,
         outlineOffset: "3px",
     },
 }))
+
+declare module '@mui/material/Button' {
+    interface ButtonPropsColorOverrides {
+        button: true;
+    }
+}
 
 const FormButton = ({ label, isDisabled, ...props }: FormButtonProps) => {
 
@@ -40,7 +47,7 @@ const FormButton = ({ label, isDisabled, ...props }: FormButtonProps) => {
             variant="contained"
             disabled={isDisabled}
             disableElevation
-            color="secondary"
+            color="button"
         >
             {label}
         </StyledFormButton>

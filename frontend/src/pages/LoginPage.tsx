@@ -1,16 +1,18 @@
 import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, styled, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useRef, useState, useEffect } from 'react';
-import TextInputField from '../../components/form/TextInputField';
-import Footer from '../../components/layout/Footer';
-import Navbar from '../../components/Navbar';
+import TextInputField from '../components/form/TextInputField';
+import Footer from '../features/footer/Footer';
+import Navbar from '../features/navbar/Navbar';
 import { useForm } from 'react-hook-form';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import FormButton from '../../components/form/FormButton';
-import * as UserApi from '../../network/users_api';
+import FormButton from '../components/form/FormButton';
+import * as UserApi from '../network/users_api';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import NavigationLink from '../../components/links/NavigationLink';
+import NavigationLink from '../components/links/NavigationLink';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../state/mode';
 
 const LoginPage = () => {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<UserApi.LoginCredentials>({
@@ -21,6 +23,7 @@ const LoginPage = () => {
   });
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -30,11 +33,10 @@ const LoginPage = () => {
     e.preventDefault();
   };
 
-  async function onSubmit(input: LoginCredentials) {
+  async function onSubmit(input: UserApi.LoginCredentials) {
     try {
-      const user = await UserApi.login(input).then((user) => { console.log(user) });
-      //TODO Add logic for saving user in redux etc...
-      navigate("/test");
+      await UserApi.login(input).then((user) => dispatch(setUser(user)));
+      navigate("/home");
     } catch (error) {
       console.error(error);
       alert(error);
@@ -45,10 +47,12 @@ const LoginPage = () => {
     <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar />
       <Stack alignItems="center" direction="column" flexGrow={1}>
-        <Typography variant="h2" pt={10} pb={5}>Sign in</Typography>
+        <Typography variant="h1" pt={10} pb={5}>Sign in</Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack flexDirection="column" alignItems="center">
             <TextInputField
+              isFullWidth={false}
+              variant="outlined"
               type="text"
               name="username"
               label="Username"
@@ -58,6 +62,8 @@ const LoginPage = () => {
               error={errors.username}
             />
             <TextInputField
+              isFullWidth={false}
+              variant="outlined"
               type={showPassword ? "text" : "password"}
               name="password"
               label="Password"
@@ -81,7 +87,7 @@ const LoginPage = () => {
             <FormButton label="SIGN IN" isDisabled={isSubmitting} sx={{ marginTop: "1rem", width: "140px" }} />
           </Stack>
         </form>
-        <Typography variant="body1" mt="3rem" mb="1rem">Forgot password?&nbsp;
+        <Typography variant="body1" mt="10vh" mb="1rem">Forgot password?&nbsp;
           <NavigationLink title="remind password" to="/reset" text="Remind me" />
         </Typography>
         <Typography variant="body2">New User? Create new account&nbsp;

@@ -12,7 +12,7 @@ const StyledFooter = styled(Box)<BoxProps>(({ theme }) => ({
 
 const Footer = () => {
   return (
-    <StyledFooter display="flex">
+    <StyledFooter display="flex" sx={{ position: "relative", left: 0, bottom: 0, right: 0 }}>
         <p>Copyright 2023</p>
     </StyledFooter>
   )

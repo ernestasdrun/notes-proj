@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Note } from '../../../models/note';
-import NoteComponent from '../../Note';
+import { Note } from '../../models/note';
+import NoteComponent from './notes/Note';
 import Box from '@mui/material/Box';
 import { Fab, Grid, Stack, useMediaQuery } from '@mui/material';
-import * as NotesApi from '../../../network/notes_api';
-import NoteDialog from '../../NoteDialog';
-import { Note as NoteModel } from '../../../models/note';
-import Navbar from '../../Navbar';
-import NewNoteTemplate from '../../NewNoteTemplate';
-import LoadingState from '../../LoadingState';
+import * as NotesApi from '../../network/notes_api';
+import NoteDialog from './editDialog/NoteDialog';
+import { Note as NoteModel } from '../../models/note';
+import Navbar from '../navbar/Navbar';
+import NewNoteTemplate from './notes/NewNoteTemplate';
+import LoadingState from '../../components/loading/LoadingState';
 import AddIcon from '@mui/icons-material/Add';
-import SignUpModal from '../../SignUpModal';
-import NoteOptions from './NoteOptions';
-import SearchBar from './optionComponents/SearchBar';
+import NoteOptions from './noteOptions/NoteOptions';
+import SearchBar from './noteOptions/optionComponents/SearchBar';
 
 const MainNotes = () => {
   const smallScreen = useMediaQuery('(max-width:600px)');

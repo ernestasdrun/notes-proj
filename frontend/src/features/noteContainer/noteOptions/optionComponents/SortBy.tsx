@@ -7,11 +7,18 @@ const SortButton = styled(Button)(({ theme }) => ({
     padding: "0 1px 0 1px",
     minWidth: "90px",
     height: "inherit",
+    ":focus-visible": {
+      outline: `3px solid ${theme.palette.border.main}`,
+    }
 }))
 
 const SortBy = () => {
   return (
-    <SortButton variant="outlined" endIcon={<SortRoundedIcon />}>
+    <SortButton
+      disableRipple
+      variant="outlined"
+      endIcon={<SortRoundedIcon />}
+    >
         Sort
     </SortButton>
   )
