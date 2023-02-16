@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { AppBar, Avatar, Box, Button, Divider, Icon, IconButton, ListItemIcon, Menu, MenuItem, Toolbar, Tooltip, Typography, useTheme } from '@mui/material';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
-import { useDispatch, useSelector } from 'react-redux';
-import { IUser, logOutUser, setMode } from '../../state/mode';
-import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
-import GithubDarkModeImage from '../../assets/github-mark-white.svg';
-import GithubLightModeImage from '../../assets/github-mark.svg';
-import NavbarButton from './buttons/NavbarButton';
-import { useNavigate } from 'react-router-dom';
-import { deepOrange } from '@mui/material/colors';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LogoutIcon from '@mui/icons-material/Logout';
-import SettingsIcon from '@mui/icons-material/Settings';
-import * as UserApi from '../../network/users_api';
-import ProfileMenu from './menu/ProfileMenu';
+import React, { useState } from "react";
+import { AppBar, Avatar, Box, Divider, Icon, IconButton, ListItemIcon, MenuItem, Toolbar, Tooltip, Typography, useTheme } from "@mui/material";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import { useDispatch, useSelector } from "react-redux";
+import { IUser, logOutUser, setMode } from "../../state";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import GithubDarkModeImage from "../../assets/github-mark-white.svg";
+import GithubLightModeImage from "../../assets/github-mark.svg";
+import NavbarButton from "./buttons/NavbarButton";
+import { useNavigate } from "react-router-dom";
+import { deepOrange } from "@mui/material/colors";
+import * as UserApi from "../../network/users_api";
+import ProfileMenu from "./menu/ProfileMenu";
 
 interface RootStateUser {
     user: IUser;
@@ -23,13 +20,9 @@ interface RootStateUser {
 const Navbar = () => {
     const user = useSelector<RootStateUser>((state) => state.user) as IUser;
 
-    const [toggleUserMenu, setToggleUserMenu] = useState(false);
-
     const theme = useTheme();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
@@ -68,7 +61,6 @@ const Navbar = () => {
             alert(error);
         }
     }
-
 
     const renderMenu = (
         <ProfileMenu
@@ -180,7 +172,7 @@ const Navbar = () => {
             {renderMenu}
             {renderMobileMenu}
         </Box>
-    )
-}
+    );
+};
 
 export default Navbar;

@@ -1,14 +1,14 @@
 import { Note } from "../models/note";
 import { fetchData } from "./fetchData";
 
-export async function fetchNotes(): Promise<Note[]> {
-    const response = await fetchData(`http://localhost:5001/api/notes`, { method: "GET" });
-    return response.json();
-}
-
 export interface INoteInput {
     title: string,
     text?: string,
+}
+
+export async function fetchNotes(): Promise<Note[]> {
+    const response = await fetchData(`http://localhost:5001/api/notes`, { method: "GET" });
+    return response.json();
 }
 
 export async function createNote(note: INoteInput): Promise<Note> {

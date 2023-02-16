@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Note } from '../../models/note';
-import NoteComponent from './notes/Note';
-import Box from '@mui/material/Box';
-import { Fab, Grid, Stack, useMediaQuery } from '@mui/material';
-import * as NotesApi from '../../network/notes_api';
-import NoteDialog from './editDialog/NoteDialog';
-import { Note as NoteModel } from '../../models/note';
-import Navbar from '../navbar/Navbar';
-import NewNoteTemplate from './notes/NewNoteTemplate';
-import LoadingState from '../../components/loading/LoadingState';
-import AddIcon from '@mui/icons-material/Add';
-import NoteOptions from './noteOptions/NoteOptions';
-import SearchBar from './noteOptions/optionComponents/SearchBar';
+import React, { useEffect, useState } from "react";
+import { Note } from "../../models/note";
+import NoteComponent from "./notes/Note";
+import { Fab, Grid, Box, useMediaQuery } from "@mui/material";
+import * as NotesApi from "../../network/notes_api";
+import NoteDialog from "./editDialog/NoteDialog";
+import { Note as NoteModel } from "../../models/note";
+import NewNoteTemplate from "./notes/NewNoteTemplate";
+import LoadingState from "../../components/loading/LoadingState";
+import AddIcon from "@mui/icons-material/Add";
+import NoteOptions from "./noteOptions/NoteOptions";
 
 const MainNotes = () => {
   const smallScreen = useMediaQuery('(max-width:600px)');
@@ -49,7 +46,7 @@ const MainNotes = () => {
     }
   }
 
-  const notesGrid =
+  const notesGrid = (
     <Grid
       container
       alignContent="center"
@@ -70,6 +67,7 @@ const MainNotes = () => {
         </React.Fragment>
       ))}
     </Grid>
+  );
 
   return (
     <Box padding="10px 10px 0 10px">
@@ -116,7 +114,7 @@ const MainNotes = () => {
         </Fab>
       }
     </Box>
-  )
-}
+  );
+};
 
 export default MainNotes;

@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Note } from '../models/note';
-import NoteComponent from '../features/noteContainer/notes/Note';
-import Box from '@mui/material/Box';
-import { Fab, Grid, useMediaQuery } from '@mui/material';
-import * as NotesApi from '../network/notes_api';
-import NoteDialog from '../features/noteContainer/editDialog/NoteDialog';
-import { Note as NoteModel } from '../models/note';
-import Navbar from '../features/navbar/Navbar';
-import NewNoteTemplate from '../features/noteContainer/notes/NewNoteTemplate';
-import LoadingState from '../components/loading/LoadingState';
-import AddIcon from '@mui/icons-material/Add';
-import Footer from '../features/footer/Footer';
+import React, { useEffect, useState } from "react";
+import { Note } from "../models/note";
+import NoteComponent from "../features/noteContainer/notes/Note";
+import { Fab, Box, Grid, useMediaQuery } from "@mui/material";
+import * as NotesApi from "../network/notes_api";
+import NoteDialog from "../features/noteContainer/editDialog/NoteDialog";
+import { Note as NoteModel } from "../models/note";
+import Navbar from "../features/navbar/Navbar";
+import NewNoteTemplate from "../features/noteContainer/notes/NewNoteTemplate";
+import LoadingState from "../components/loading/LoadingState";
+import AddIcon from "@mui/icons-material/Add";
+import Footer from "../features/footer/Footer";
 
 const HomePage = () => {
 
-  const smallScreen = useMediaQuery('(max-width:600px)');
+  const smallScreen = useMediaQuery("(max-width:600px)");
 
   const [notes, setNotes] = useState<Note[]>([]);
   const [notesLoading, setNotesLoading] = useState(true);
@@ -49,7 +48,7 @@ const HomePage = () => {
     }
   }
 
-  const notesGrid =
+  const notesGrid = (
     <Grid
       container
       alignContent="center"
@@ -61,7 +60,7 @@ const HomePage = () => {
           {
             index == 0 && !smallScreen &&
             <Grid item xs={12} sm={6} md={4} lg={4} xl={3}>
-              <NewNoteTemplate onTemplateClicked={setAddNoteDialog}/>
+              <NewNoteTemplate onTemplateClicked={setAddNoteDialog} />
             </Grid>
           }
           <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={note._id}>
@@ -70,6 +69,7 @@ const HomePage = () => {
         </React.Fragment>
       ))}
     </Grid>
+  );
 
   return (
     <Box minHeight="100vh" maxHeight="auto" border="1px solid red">
@@ -117,7 +117,7 @@ const HomePage = () => {
       }
       <Footer />
     </Box>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Typography, Box, useMediaQuery } from '@mui/material';
-import { styled } from '@mui/system';
+import React from "react";
+import { Typography, Box, useMediaQuery } from "@mui/material";
+import { styled } from "@mui/system";
 
 const StyledBox = styled(Box, {
     shouldForwardProp: (prop) => prop !== "screenSize",
@@ -30,9 +30,7 @@ const StyledBox = styled(Box, {
     "& 	.MuiTypography-h3": {
         fontSize: "44px",
     },
-
 }));
-
 
 interface INoteTemplateProps {
     onTemplateClicked: (open: boolean) => void;
@@ -45,7 +43,7 @@ const NewNoteTemplate = ({ onTemplateClicked }: INoteTemplateProps) => {
         if (e.code === "Enter") {
             onTemplateClicked(true);
         }
-    }
+    };
 
     return (
         <StyledBox
@@ -61,7 +59,7 @@ const NewNoteTemplate = ({ onTemplateClicked }: INoteTemplateProps) => {
                 + New Note
             </Typography>
         </StyledBox>
-    )
-}
+    );
+};
 
 export default NewNoteTemplate;

@@ -1,9 +1,15 @@
-import React from 'react';
-import { Card, CardContent, Typography, Box, Divider, useMediaQuery } from '@mui/material';
-import { Note as NoteModel } from '../../../models/note';
-import { styled } from '@mui/system';
-import { formatDate } from '../../../utils/formatDate';
-import DeleteButton from '../../../components/buttons/DeleteButton';
+import React from "react";
+import { Card, CardContent, Typography, Box, Divider, useMediaQuery } from "@mui/material";
+import { Note as NoteModel } from "../../../models/note";
+import { styled } from "@mui/system";
+import { formatDate } from "../../../utils/formatDate";
+import DeleteButton from "../../../components/buttons/DeleteButton";
+
+interface INoteProps {
+    note: NoteModel,
+    onNoteClicked: (note: NoteModel) => void;
+    onDeleteNote: (note: NoteModel) => void;
+}
 
 const StyledCard = styled(Card)<{ screen: boolean }>(({ theme, screen }) => ({
     width: screen ? "90vw" : "auto",
@@ -41,13 +47,6 @@ const StyledCard = styled(Card)<{ screen: boolean }>(({ theme, screen }) => ({
     },
 }));
 
-
-interface INoteProps {
-    note: NoteModel,
-    onNoteClicked: (note: NoteModel) => void;
-    onDeleteNote: (note: NoteModel) => void;
-}
-
 const Note = ({ note, onNoteClicked, onDeleteNote }: INoteProps) => {
 
     const smallScreen = useMediaQuery('(max-width:599px)');
@@ -70,7 +69,7 @@ const Note = ({ note, onNoteClicked, onDeleteNote }: INoteProps) => {
         if (e.code === "Enter") {
             onNoteClicked(note);
         }
-    }
+    };
 
     return (
         <StyledCard screen={smallScreen} onKeyDown={(e) => handleKeyDown(e)} onClick={() => onNoteClicked(note)} tabIndex={0}>
@@ -81,7 +80,7 @@ const Note = ({ note, onNoteClicked, onDeleteNote }: INoteProps) => {
                             {title}
                         </Typography>
                     </Box>
-                    <DeleteButton size="medium" note={note} onDeleteNote={onDeleteNote}/>
+                    <DeleteButton size="medium" note={note} onDeleteNote={onDeleteNote} />
                 </Box>
                 <Divider />
                 <Box height="110px" px="8px" sx={{ overflowY: "hidden", maskImage: "linear-gradient(180deg, #000 60%, transparent)" }}>
@@ -95,7 +94,7 @@ const Note = ({ note, onNoteClicked, onDeleteNote }: INoteProps) => {
                 </Typography>
             </CardContent>
         </StyledCard>
-    )
-}
+    );
+};
 
 export default Note;

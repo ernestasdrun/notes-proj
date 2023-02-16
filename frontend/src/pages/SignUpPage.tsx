@@ -1,18 +1,17 @@
-import { FormControl, IconButton, InputAdornment, OutlinedInput, Stack, styled, TextField, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-import React, { useState, useEffect } from 'react';
-import TextInputField from '../components/form/TextInputField';
-import Footer from '../features/footer/Footer';
-import Navbar from '../features/navbar/Navbar';
-import { useForm } from 'react-hook-form';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import FormButton from '../components/form/FormButton';
-import * as UserApi from '../network/users_api';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import NavigationLink from '../components/links/NavigationLink';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../state/mode';
+import React, { useState } from "react";
+import { IconButton, InputAdornment, Stack, Typography } from "@mui/material";
+import { Box } from "@mui/system";
+import TextInputField from "../components/form/TextInputField";
+import Footer from "../features/footer/Footer";
+import Navbar from "../features/navbar/Navbar";
+import { useForm } from "react-hook-form";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import FormButton from "../components/form/FormButton";
+import * as UserApi from "../network/users_api";
+import { useNavigate } from "react-router-dom";
+import NavigationLink from "../components/links/NavigationLink";
+import { useDispatch } from "react-redux";
+import { setUser } from "../state";
 
 const SignUpPage = () => {
   const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<UserApi.SignUpCredentials>({
@@ -34,7 +33,6 @@ const SignUpPage = () => {
   const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
   };
-
 
   async function onSubmit(input: UserApi.SignUpCredentials) {
     try {
@@ -129,7 +127,7 @@ const SignUpPage = () => {
         <Footer />
       </Box>
     </Box>
-  )
-}
+  );
+};
 
 export default SignUpPage;

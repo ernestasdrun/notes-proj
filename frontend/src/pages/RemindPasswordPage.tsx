@@ -1,13 +1,12 @@
-import { Stack, styled, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-import React, { useRef, useState, useEffect } from 'react';
-import TextInputField from '../components/form/TextInputField';
-import Footer from '../features/footer/Footer';
-import Navbar from '../features/navbar/Navbar';
-import { useForm } from 'react-hook-form';
-import FormButton from '../components/form/FormButton';
-import { useNavigate } from 'react-router-dom';
-import NavigationLink from '../components/links/NavigationLink';
+import React from "react";
+import { Box, Stack, Typography } from "@mui/material";
+import TextInputField from "../components/form/TextInputField";
+import Footer from "../features/footer/Footer";
+import Navbar from "../features/navbar/Navbar";
+import { useForm } from "react-hook-form";
+import FormButton from "../components/form/FormButton";
+import { useNavigate } from "react-router-dom";
+import NavigationLink from "../components/links/NavigationLink";
 
 interface ReminderProps {
   email: string,
@@ -24,8 +23,8 @@ const RemindPasswordPage = () => {
 
   async function onSubmit(input: ReminderProps) {
     try {
-      //TODO Add logic for saving user in redux etc...
-      //TODO add confirmation if email does not exist in database
+      //TODO
+      console.log(input)
       navigate("/home");
     } catch (error) {
       console.error(error);
@@ -62,7 +61,7 @@ const RemindPasswordPage = () => {
         <Footer />
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default RemindPasswordPage
+export default RemindPasswordPage;

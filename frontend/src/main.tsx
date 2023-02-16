@@ -1,10 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import './index.scss';
-import modeReducer from "./state/mode";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.scss";
+import modeReducer from "./state";
 import { configureStore } from "@reduxjs/toolkit";
-import { Provider } from 'react-redux';
+import { Provider } from "react-redux";
 import {
   persistStore,
   persistReducer,
@@ -15,8 +15,8 @@ import {
   PURGE,
   REGISTER
 } from "redux-persist";
-import storage from 'redux-persist/lib/storage';
-import { PersistGate } from 'redux-persist/integration/react';
+import storage from "redux-persist/lib/storage";
+import { PersistGate } from "redux-persist/integration/react";
 
 const persistConfig = { key: "root", storage, version: 1 };
 const persistedReducer = persistReducer(persistConfig, modeReducer);
@@ -30,7 +30,7 @@ const store = configureStore({
     }),
 });
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistStore(store)}>
@@ -38,4 +38,4 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       </PersistGate>
     </Provider>
   </React.StrictMode>,
-)
+);

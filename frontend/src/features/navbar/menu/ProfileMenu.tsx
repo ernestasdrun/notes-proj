@@ -1,11 +1,10 @@
-import React from 'react';
-import { Divider, ListItemIcon, Menu, MenuItem, MenuList } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LogoutIcon from '@mui/icons-material/Logout';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { useSelector } from 'react-redux';
-import { IUser } from '../../../state/mode';
-import NavbarButton from '../buttons/NavbarButton';
+import React from "react";
+import { Divider, ListItemIcon, Menu, MenuItem, MenuList } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { useSelector } from "react-redux";
+import { IUser } from "../../../state";
 
 interface RootStateUser {
     user: IUser;
@@ -80,7 +79,7 @@ const ProfileMenu = ({ anchorEl, isMenuOpen, handleMenuClose, onLogoutClick, ...
                 </MenuList>
             }
         </Menu>
-    )
-}
+    );
+};
 
-export default ProfileMenu
+export default ProfileMenu;

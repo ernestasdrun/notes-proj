@@ -1,20 +1,17 @@
-import React from 'react';
-import { Divider, Slide, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, useMediaQuery, IconButton, Box, InputBase } from '@mui/material';
-import { TransitionProps } from '@mui/material/transitions';
-import { styled } from '@mui/system';
-import { FormControl } from '@mui/material';
-import { Note } from '../../../models/note';
-import { useForm } from 'react-hook-form';
-import { INoteInput } from '../../../network/notes_api';
-import * as NotesApi from '../../../network/notes_api';
-import CloseIcon from '@mui/icons-material/Close';
-import TextInputField from '../../../components/form/TextInputField';
-import FormButton from '../../../components/form/FormButton';
-import CloseButton from '../../../components/buttons/CloseButton';
+import React from "react";
+import { Divider, Slide, Dialog, DialogActions, DialogContent, DialogTitle, Box } from "@mui/material";
+import { TransitionProps } from "@mui/material/transitions";
+import { Note } from "../../../models/note";
+import { useForm } from "react-hook-form";
+import { INoteInput } from "../../../network/notes_api";
+import * as NotesApi from "../../../network/notes_api";
+import TextInputField from "../../../components/form/TextInputField";
+import FormButton from "../../../components/form/FormButton";
+import CloseButton from "../../../components/buttons/CloseButton";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
-        children: React.ReactElement<any, any>;
+        children: React.ReactElement<unknown, any>;
     },
     ref: React.Ref<unknown>,
 ) {
@@ -57,7 +54,7 @@ const NoteDialog = ({ open = true, noteToEdit, onDismiss, onNoteSaved }: IAddNot
         if (e.code === "Escape") {
             onDismiss();
         }
-    }
+    };
 
     return (
         <Dialog
@@ -86,29 +83,29 @@ const NoteDialog = ({ open = true, noteToEdit, onDismiss, onNoteSaved }: IAddNot
             <form onSubmit={handleSubmit(onSubmit)}>
                 <DialogContent>
                     <Box display="flex" flexDirection="column">
-                    <TextInputField
-                        isFullWidth={true}
-                        variant="outlined"
-                        label="Title"
-                        name="title"
-                        inputProps={{ maxLength: 50 }}
-                        size="small"
-                        error={errors.title}
-                        register={register}
-                        registerOptions={{ required: "Required" }}
-                        sx={{ mb: 2 }}
-                    />
-                    <TextInputField
-                        isFullWidth={true}
-                        variant="outlined"
-                        label="Text"
-                        name="text"
-                        size="small"
-                        rows={16}
-                        multiline
-                        inputProps={{ maxLength: 100000 }}
-                        register={register}
-                    />
+                        <TextInputField
+                            isFullWidth={true}
+                            variant="outlined"
+                            label="Title"
+                            name="title"
+                            inputProps={{ maxLength: 50 }}
+                            size="small"
+                            error={errors.title}
+                            register={register}
+                            registerOptions={{ required: "Required" }}
+                            sx={{ mb: 2 }}
+                        />
+                        <TextInputField
+                            isFullWidth={true}
+                            variant="outlined"
+                            label="Text"
+                            name="text"
+                            size="small"
+                            rows={16}
+                            multiline
+                            inputProps={{ maxLength: 100000 }}
+                            register={register}
+                        />
                     </Box>
                 </DialogContent>
                 <DialogActions>
@@ -119,7 +116,7 @@ const NoteDialog = ({ open = true, noteToEdit, onDismiss, onNoteSaved }: IAddNot
                 </DialogActions>
             </form>
         </Dialog>
-    )
-}
+    );
+};
 
-export default NoteDialog
+export default NoteDialog;

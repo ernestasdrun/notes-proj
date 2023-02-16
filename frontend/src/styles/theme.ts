@@ -1,4 +1,4 @@
-import { PaletteMode } from '@mui/material';
+import { PaletteMode } from "@mui/material";
 
 export const themeSettings = (mode: PaletteMode) => {
     return {
@@ -144,25 +144,24 @@ export const themeSettings = (mode: PaletteMode) => {
     };
 };
 
-declare module '@mui/material/styles' {
+declare module "@mui/material/styles" {
 
     interface Palette {
-        neutral: Palette['primary'];
-        fieldFocus: Palette['primary'];
-        border: Palette['primary'];
-        search: Palette['primary'];
-        button: Palette['primary'];
-        customButton: Palette['primary'];
+        neutral: Palette["primary"];
+        fieldFocus: Palette["primary"];
+        border: Palette["primary"];
+        search: Palette["primary"];
+        button: Palette["primary"];
+        customButton: Palette["primary"];
     }
 
-    // allow configuration using `createTheme`
     interface PaletteOptions {
-        neutral?: PaletteOptions['primary'];
-        fieldFocus?: PaletteOptions['primary'];
-        border?: PaletteOptions['primary'];
-        search?: PaletteOptions['primary'];
-        button?: PaletteOptions['primary'];
-        customButton?: PaletteOptions['primary'];
+        neutral?: PaletteOptions["primary"];
+        fieldFocus?: PaletteOptions["primary"];
+        border?: PaletteOptions["primary"];
+        search?: PaletteOptions["primary"];
+        button?: PaletteOptions["primary"];
+        customButton?: PaletteOptions["primary"];
     }
 
     interface PaletteColor {

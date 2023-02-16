@@ -1,15 +1,15 @@
-import React from 'react';
-import { styled } from '@mui/system';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Note, Note as NoteModel } from '../../models/note';
-import { Tooltip } from '@mui/material';
+import React from "react";
+import { styled } from "@mui/system";
+import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Note, Note as NoteModel } from "../../models/note";
+import { Tooltip } from "@mui/material";
 
 interface DeleteButtonProps {
-    size?: "small" | "inherit" | "medium" | "large" | undefined,
+    size?: "inherit" | "large" | "medium" | "small" | undefined,
     note: Note,
     onDeleteNote: (note: NoteModel) => void,
-    [x: string]: any,
+    [x: string]: unknown,
 }
 
 const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
@@ -17,13 +17,10 @@ const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
     ":hover": {
         color: theme.palette.neutral.red,
     },
-
     ":focus-visible": {
         outline: `3px solid ${theme.palette.border.main}`,
     },
-}))
-
-
+}));
 
 const DeleteButton = ({ size, note, onDeleteNote, ...props }: DeleteButtonProps) => {
 
@@ -42,6 +39,6 @@ const DeleteButton = ({ size, note, onDeleteNote, ...props }: DeleteButtonProps)
             </StyledIconButton>
         </Tooltip>
     );
-}
+};
 
 export default DeleteButton;

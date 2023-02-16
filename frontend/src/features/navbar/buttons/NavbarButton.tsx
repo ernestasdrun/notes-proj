@@ -1,7 +1,7 @@
-import { Box, Typography, TypographyClasses } from '@mui/material'
-import { styled } from '@mui/system'
-import React from 'react'
-import { NavigateFunction } from 'react-router-dom';
+import React from "react";
+import { Box, Typography } from "@mui/material";
+import { styled } from "@mui/system";
+import { NavigateFunction } from "react-router-dom";
 
 interface NavbarButtonProps {
   text: string,
@@ -13,7 +13,6 @@ interface NavbarButtonProps {
 
 const ButtonContainer = styled(Box)(({ theme }) => ({
   borderRadius: "5px",
-  //backgroundColor: theme.palette.customButton.main,
   border: `3px solid ${theme.palette.customButton.dark}`,
   transition: "background-color",
   transitionDuration: "200ms",
@@ -30,11 +29,10 @@ const ButtonContainer = styled(Box)(({ theme }) => ({
     userSelect: "none",
     color: theme.palette.text.primary,
     fontWeight: "500",
-  }
-}))
+  },
+}));
 
 const NavbarButton = ({ text, textVariant, link, navigate, ...props }: NavbarButtonProps) => {
-
   return (
     <ButtonContainer
       {...props}
@@ -46,7 +44,7 @@ const NavbarButton = ({ text, textVariant, link, navigate, ...props }: NavbarBut
     >
       <Typography variant={textVariant}>{text}</Typography>
     </ButtonContainer>
-  )
-}
+  );
+};
 
 export default NavbarButton;

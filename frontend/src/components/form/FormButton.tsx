@@ -1,12 +1,17 @@
-import React from 'react';
-import { Typography, TextField, FormHelperText } from '@mui/material';
-import { styled } from '@mui/system';
-import Button from '@mui/material/Button';
+import React from "react";
+import { styled } from "@mui/system";
+import Button from "@mui/material/Button";
+
+declare module "@mui/material/Button" {
+    interface ButtonPropsColorOverrides {
+        button: true;
+    }
+}
 
 interface FormButtonProps {
     label: string,
     isDisabled: boolean,
-    [x: string]: any,
+    [x: string]: unknown,
 }
 
 const StyledFormButton = styled(Button)(({ theme }) => ({
@@ -29,16 +34,9 @@ const StyledFormButton = styled(Button)(({ theme }) => ({
         outline: `3px solid ${theme.palette.border.main}`,
         outlineOffset: "3px",
     },
-}))
-
-declare module '@mui/material/Button' {
-    interface ButtonPropsColorOverrides {
-        button: true;
-    }
-}
+}));
 
 const FormButton = ({ label, isDisabled, ...props }: FormButtonProps) => {
-
     return (
         <StyledFormButton
             {...props}
@@ -52,6 +50,6 @@ const FormButton = ({ label, isDisabled, ...props }: FormButtonProps) => {
             {label}
         </StyledFormButton>
     );
-}
+};
 
 export default FormButton;

@@ -1,13 +1,10 @@
-import Grid from '@mui/material/Grid';
-import { Divider, ToggleButtonGroup, ToggleButton, styled } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import React from 'react';
+import React from "react";
+import { ToggleButtonGroup, ToggleButton, styled } from '@mui/material';
 
 interface MobileSidebarProps {
     alignment: string,
     setAlignment: (alignment: string) => void,
 }
-
 
 const StyledTogleGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     padding: "4px 10px 0 10px",
@@ -15,7 +12,7 @@ const StyledTogleGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     "& .MuiToggleButton-root:focus-visible": {
         outline: `3px solid ${theme.palette.border.main}`,
     },
-}))
+}));
 
 const MobileSidebar = ({ alignment, setAlignment }: MobileSidebarProps) => {
 
@@ -37,7 +34,7 @@ const MobileSidebar = ({ alignment, setAlignment }: MobileSidebarProps) => {
             <ToggleButton value="myNotes" disableRipple onClick={handleChange}>My Notes</ToggleButton>
             <ToggleButton value="groups" disableRipple onClick={handleChange}>Groups</ToggleButton>
         </StyledTogleGroup>
-    )
-}
+    );
+};
 
 export default MobileSidebar;

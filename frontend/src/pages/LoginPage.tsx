@@ -1,18 +1,16 @@
-import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, styled, TextField, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-import React, { useRef, useState, useEffect } from 'react';
-import TextInputField from '../components/form/TextInputField';
-import Footer from '../features/footer/Footer';
-import Navbar from '../features/navbar/Navbar';
-import { useForm } from 'react-hook-form';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import FormButton from '../components/form/FormButton';
-import * as UserApi from '../network/users_api';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import NavigationLink from '../components/links/NavigationLink';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../state/mode';
+import React, { useState } from "react";
+import { IconButton, InputAdornment, Stack, Typography, Box } from "@mui/material";
+import TextInputField from "../components/form/TextInputField";
+import Footer from "../features/footer/Footer";
+import Navbar from "../features/navbar/Navbar";
+import { useForm } from "react-hook-form";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import FormButton from "../components/form/FormButton";
+import * as UserApi from "../network/users_api";
+import { useNavigate } from "react-router-dom";
+import NavigationLink from "../components/links/NavigationLink";
+import { useDispatch } from "react-redux";
+import { setUser } from "../state";
 
 const LoginPage = () => {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<UserApi.LoginCredentials>({
@@ -98,7 +96,7 @@ const LoginPage = () => {
         <Footer />
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

@@ -1,6 +1,18 @@
-import React, { useState } from 'react';
-import { FormHelperText, styled, OutlinedInput, FormControl, InputLabel } from '@mui/material';
+import React from "react";
+import { FormHelperText, styled, OutlinedInput, FormControl, InputLabel } from "@mui/material";
 import { FieldError, RegisterOptions, UseFormRegister } from "react-hook-form";
+
+declare module "@mui/material/InputBase" {
+    interface InputBasePropsColorOverrides {
+        fieldFocus: true;
+    }
+}
+
+declare module "@mui/material/FormLabel" {
+    interface FormLabelPropsColorOverrides {
+        fieldFocus: true;
+    }
+}
 
 interface TextInputFieldProps {
     variant?: "standard" | "outlined" | "filled" | undefined,
@@ -11,24 +23,12 @@ interface TextInputFieldProps {
     registerOptions?: RegisterOptions,
     error?: FieldError,
     errMessage?: string,
-    [x: string]: any,
+    [x: string]: unknown,
 }
 
 const StyledTextField = styled(OutlinedInput)(({ theme }) => ({
     borderRadius: "12px",
-}))
-
-declare module '@mui/material/InputBase' {
-    interface InputBasePropsColorOverrides {
-        fieldFocus: true;
-    }
-}
-
-declare module '@mui/material/FormLabel' {
-    interface FormLabelPropsColorOverrides {
-        fieldFocus: true;
-    }
-}
+}));
 
 const TextInputField = ({ variant, isFullWidth, name, label, register, registerOptions, error, errMessage, ...props }: TextInputFieldProps) => {
     return (
@@ -50,6 +50,6 @@ const TextInputField = ({ variant, isFullWidth, name, label, register, registerO
             {error?.type != ("required" || undefined) && <FormHelperText error>{errMessage}</FormHelperText>}
         </FormControl>
     );
-}
+};
 
 export default TextInputField;
