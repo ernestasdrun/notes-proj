@@ -8,6 +8,8 @@ import * as NotesApi from "../../../network/notes_api";
 import TextInputField from "../../../components/form/TextInputField";
 import FormButton from "../../../components/form/FormButton";
 import CloseButton from "../../../components/buttons/CloseButton";
+import { useAppSelector } from "../../../app/hooks";
+import { IUser } from "../../auth/authSlice";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -26,6 +28,7 @@ interface IAddNoteDialogProps {
 }
 
 const NoteDialog = ({ open = true, noteToEdit, onDismiss, onNoteSaved }: IAddNoteDialogProps) => {
+    const user = useAppSelector((state) => state.auth.user) as IUser;
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<INoteInput>({
         defaultValues: {
@@ -38,9 +41,9 @@ const NoteDialog = ({ open = true, noteToEdit, onDismiss, onNoteSaved }: IAddNot
         try {
             let noteResponse: Note;
             if (noteToEdit) {
-                noteResponse = await NotesApi.updateNote(noteToEdit._id, input);
+                noteResponse = await NotesApi.updateNote(noteToEdit._id, input, user.token);
             } else {
-                noteResponse = await NotesApi.createNote(input);
+                noteResponse = await NotesApi.createNote(input, user.token);
             }
 
             onNoteSaved(noteResponse);

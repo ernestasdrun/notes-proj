@@ -2,16 +2,20 @@ import { RequestHandler } from "express";
 import createHttpError from "http-errors";
 import UserModel from "../models/user";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import env from "../util/validateEnv";
+import { AuthRequest } from "../middleware/auth";
 
-export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
-    const authenticatedUser = req.session.userId;
+export interface UserReq {
+    userId: string,
+    username: string,
+}
 
+export const getAuthenticatedUser: RequestHandler = async (req: AuthRequest, res, next) => {
+    const { userId } = <UserReq> req.user;
     try {
-        if (!authenticatedUser) {
-            throw createHttpError(401, "User not authenticated");
-        }
-
-        const user = await UserModel.findById(authenticatedUser).select(["+email", "-__v", "-createdAt", "-updatedAt"]).exec();
+        if (!userId) throw createHttpError(400, "error")
+        const user = await UserModel.findById(userId).select(["+email", "-__v", "-createdAt", "-updatedAt"]).exec();
         res.status(200).json(user);
     } catch (error) {
         next(error);
@@ -54,12 +58,15 @@ export const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = asy
             password: passwordHashed,
         });
 
-        req.session.userId = newUser._id;
+        const token = jwt.sign({
+            userId: newUser._id,
+            username: newUser.userName,
+        }, env.ACCESS_TOKEN_SECRET, {expiresIn: "1d"});
 
         res.status(201).json({
-            "_id": newUser._id,
-            "userName": newUser.userName,
-            "email": newUser.email,
+            "userId": newUser._id,
+            "username": newUser.userName,
+            "token": token,
         });
     } catch (error) {
         next(error);
@@ -92,11 +99,15 @@ export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async
             throw createHttpError(401, "Invalid credentials");
         }
 
-        req.session.userId = user._id;
+        const token = jwt.sign({
+            userId: user._id,
+            username: user.userName,
+        }, env.ACCESS_TOKEN_SECRET, {expiresIn: "1d"});
+
         res.status(201).json({
-            "_id": user._id,
-            "userName": user.userName,
-            "email": user.email,
+            "userId": user._id,
+            "username": user.userName,
+            "token": token,
         });
     } catch (error) {
         next(error);
@@ -105,11 +116,12 @@ export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async
 
 export const logout: RequestHandler = async (req, res, next) => {
 
-    req.session.destroy(error => {
+    //TODO delete and implement JWT
+    /*req.session.destroy(error => {
         if (error) {
             next(error);
         } else {
             res.sendStatus(200);
         }
-    });
+    });*/
 }

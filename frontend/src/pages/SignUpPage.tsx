@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { IconButton, InputAdornment, Stack, Typography } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Alert, IconButton, InputAdornment, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import TextInputField from "../components/form/TextInputField";
 import Footer from "../features/footer/Footer";
@@ -10,8 +10,10 @@ import FormButton from "../components/form/FormButton";
 import * as UserApi from "../network/users_api";
 import { useNavigate } from "react-router-dom";
 import NavigationLink from "../components/links/NavigationLink";
-import { useDispatch } from "react-redux";
-import { setUser } from "../state";
+import { ConflictError } from "../errors/http_errors";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { registerUser, reset } from "../features/auth/authSlice";
+import LoadingState from "../components/loading/LoadingState";
 
 const SignUpPage = () => {
   const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<UserApi.SignUpCredentials>({
@@ -23,8 +25,12 @@ const SignUpPage = () => {
     }
   });
 
+  const { user, isLoading, isSuccess, isError, message } = useAppSelector((state) => state.auth);
+
+  const [errorText, setErrorText] = useState<string | null>(null);
+
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -34,12 +40,29 @@ const SignUpPage = () => {
     e.preventDefault();
   };
 
+  useEffect(() => {
+    if (isError) {
+      console.error(message)
+    }
+    if (isSuccess || user) {
+      navigate("/home");
+    }
+
+    dispatch(reset());
+  }, [user, isSuccess, isError, message, navigate, dispatch])
+
+  if (isLoading) {
+    <LoadingState />
+  }
+
   async function onSubmit(input: UserApi.SignUpCredentials) {
     try {
       if (input.password === input.passwordConfirm) {
         delete input["passwordConfirm"];
-        await UserApi.signUp(input).then((user) => dispatch(setUser(user)));
-        navigate("/home");
+        dispatch(registerUser(input));
+
+        //await UserApi.signUp(input).then((user) => dispatch(setUser(user)));
+        //navigate("/home");
       } else {
         setError("passwordConfirm", {
           type: "manual",
@@ -47,8 +70,12 @@ const SignUpPage = () => {
         });
       }
     } catch (error) {
+      if (error instanceof ConflictError) {
+        setErrorText(error.message);
+      } else {
+        alert(error);
+      }
       console.error(error);
-      alert(error);
     }
   }
 
@@ -59,6 +86,9 @@ const SignUpPage = () => {
         <Typography variant="h1" fontSize="2.5rem" p="8vh 2rem 2.5rem 3rem">Welcome, please Sign Up here</Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack flexDirection="column" alignItems="center">
+            {errorText &&
+              <Alert severity="error" variant="filled" sx={{ minWidth: "300px", margin: "0 10px 15px 10px" }}>{errorText}</Alert>
+            }
             <TextInputField
               isFullWidth={false}
               variant="outlined"

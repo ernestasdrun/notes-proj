@@ -17,6 +17,9 @@ export const themeSettings = (mode: PaletteMode) => {
                         main: "#28923f",
                         light: "#42ad59",
                     },
+                    error: {
+                        main: "#a72424",
+                    },
                     neutral: {
                         dark: "#304242",
                         main: "#000",
@@ -40,6 +43,7 @@ export const themeSettings = (mode: PaletteMode) => {
                     },
                     border: {
                         main: "#ffffff",
+                        colored: "#ffffff",
                     },
                     search: {
                         main: "#4e4d4d",
@@ -87,6 +91,7 @@ export const themeSettings = (mode: PaletteMode) => {
                     },
                     border: {
                         main: "#000000",
+                        colored: "#1a8116",
                     },
                     search: {
                         main: "#ffffff",

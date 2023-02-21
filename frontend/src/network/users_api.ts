@@ -13,9 +13,12 @@ export interface LoginCredentials {
     password: string,
 }
 
-export async function getLoggedInUser(): Promise<User> {
+export async function getLoggedInUser(token: string): Promise<User> {
     const response = await fetchData(`http://127.0.0.1:5001/api/users`, { 
         method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        }
     });
     return response.json();
 }

@@ -17,7 +17,14 @@ const userSchema = new Schema({
         required: true,
         unique: true,
         select: false
-    }
+    },
+    categories: [{
+        type: String,
+    }],
+    groups: [{
+        type: Schema.Types.ObjectId,
+        ref: "Group",
+    }]
 }, { timestamps: true });
 
 type User = InferSchemaType<typeof userSchema>;

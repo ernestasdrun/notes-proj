@@ -3,12 +3,7 @@ import { Divider, ListItemIcon, Menu, MenuItem, MenuList } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { useSelector } from "react-redux";
-import { IUser } from "../../../state";
-
-interface RootStateUser {
-    user: IUser;
-}
+import { useAppSelector } from "../../../app/hooks";
 
 interface ProfileMenuProps {
     anchorEl: HTMLElement | null,
@@ -20,7 +15,7 @@ interface ProfileMenuProps {
 }
 
 const ProfileMenu = ({ anchorEl, isMenuOpen, handleMenuClose, onLogoutClick, ...props }: ProfileMenuProps) => {
-    const user = useSelector<RootStateUser>((state) => state.user) as IUser;
+    const user = useAppSelector((state) => state.auth.user);
 
     return (
         <Menu

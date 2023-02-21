@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AppBar, Avatar, Box, Divider, Icon, IconButton, ListItemIcon, MenuItem, Toolbar, Tooltip, Typography, useTheme } from "@mui/material";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import { useDispatch, useSelector } from "react-redux";
-import { IUser, logOutUser, setMode } from "../../state";
+import { setMode } from "../../styles/modeSlice";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import GithubDarkModeImage from "../../assets/github-mark-white.svg";
 import GithubLightModeImage from "../../assets/github-mark.svg";
@@ -12,16 +11,14 @@ import { useNavigate } from "react-router-dom";
 import { deepOrange } from "@mui/material/colors";
 import * as UserApi from "../../network/users_api";
 import ProfileMenu from "./menu/ProfileMenu";
-
-interface RootStateUser {
-    user: IUser;
-}
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { logoutUser } from "../auth/authSlice";
 
 const Navbar = () => {
-    const user = useSelector<RootStateUser>((state) => state.user) as IUser;
+    const user = useAppSelector((state) => state.auth.user);
 
     const theme = useTheme();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -47,15 +44,41 @@ const Navbar = () => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    /*useEffect(() => {
+        //onLogoutClick();
+        const interval = setInterval(() => {
+            console.log("PRINTING EVERY 10min");
+            isTokenValid(user?.token);
+            if(user === null) clearInterval(interval);
+        }, 1000 * 60 * 10)
+    }, [])*/
+
+    async function isTokenValid(token: string | undefined) {
+        if (token) {
+            try {
+                await UserApi.getLoggedInUser(token).then((res) => {
+                    console.log(res);
+                })
+            } catch (error) {
+                //TODO add notification about session time ending
+                dispatch(logoutUser());
+            }
+        }
+    }
+
     async function onLogoutClick() {
         try {
             handleMenuClose();
-            /*await UserApi.getLoggedInUser().then((user) => {
-                console.log(user);
-            });*/
-            await UserApi.logout().then(() => {
+            dispatch(logoutUser());
+            /*if (user)
+            await UserApi.getLoggedInUser(user.token).then((res) => {
+                console.log(res);
+            })*/
+
+            /*await UserApi.logout().then((res) => {
                 dispatch(logOutUser());
-            });
+                console.log(res);
+            });*/
         } catch (error) {
             console.error(error);
             alert(error);
@@ -136,7 +159,7 @@ const Navbar = () => {
                         {user ?
                             <Avatar
                                 sx={{ bgcolor: deepOrange[500] }}
-                                alt={user.userName}
+                                alt={user.username}
                                 onClick={handleProfileMenuOpen}
                             />
                             :

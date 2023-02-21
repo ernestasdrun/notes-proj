@@ -1,22 +1,43 @@
 import React from "react";
-import { Divider, Stack } from "@mui/material";
-import CategoryButton from "./optionComponents/CategoryButton";
+import { Button, Divider, Stack, useMediaQuery } from "@mui/material";
 import SearchBar from "./optionComponents/SearchBar";
 import SortBy from "./optionComponents/SortBy";
+import { Note } from "../../../models/note";
+import CategoryButtonMobile from "./optionComponents/CategoryButtonMobile";
+import NewCategoryButton from "./optionComponents/NewCategoryButton";
 
-const NoteOptions = () => {
+interface NoteOptionsProps {
+    notes: Note[],
+    setNotes: React.Dispatch<React.SetStateAction<Note[]>>,
+}
+
+const NoteOptions = ({ notes, setNotes }: NoteOptionsProps) => {
+    const smallScreen = useMediaQuery('(max-width:730px)');
+
     return (
         <Stack
-
             direction="row"
             alignItems="center"
+            justifyContent="space-between"
             spacing={1}
-            divider={<Divider orientation="vertical" flexItem />}
             height="35px"
         >
-            <CategoryButton />
+            {smallScreen ?
+                <CategoryButtonMobile />
+                :
+                <Stack
+                    flexDirection="row"
+                    justifyContent="center"
+                    height="35px"
+                    gap={1}
+                >
+                    <NewCategoryButton />
+                    <Button variant="outlined">Text</Button>
+                    <Button variant="outlined"/>
+                </Stack>
+            }
             <Stack
-                width="100%"
+                alignSelf="flex-end"
                 direction="row"
                 alignItems="center"
                 justifyContent="flex-end"
@@ -25,7 +46,7 @@ const NoteOptions = () => {
                 height="35px"
             >
                 <SearchBar />
-                <SortBy />
+                <SortBy notes={notes} setNotes={setNotes} />
             </Stack>
         </Stack>
     );

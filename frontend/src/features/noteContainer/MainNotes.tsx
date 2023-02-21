@@ -8,12 +8,21 @@ import { Note as NoteModel } from "../../models/note";
 import NewNoteTemplate from "./notes/NewNoteTemplate";
 import LoadingState from "../../components/loading/LoadingState";
 import AddIcon from "@mui/icons-material/Add";
-import NoteOptions from "./noteOptions/NoteOptions";
+import Footer from "../footer/Footer";
+import { useAppSelector } from "../../app/hooks";
+import { IUser } from "../auth/authSlice";
 
-const MainNotes = () => {
+interface MainNotesProps {
+  notes: Note[],
+  setNotes: React.Dispatch<React.SetStateAction<Note[]>>,
+}
+
+const MainNotes = ({ notes, setNotes }: MainNotesProps) => {
+  const user = useAppSelector((state) => state.auth.user) as IUser;
+
   const smallScreen = useMediaQuery('(max-width:600px)');
 
-  const [notes, setNotes] = useState<Note[]>([]);
+  //const [notes, setNotes] = useState<Note[]>([]);
   const [notesLoading, setNotesLoading] = useState(true);
   const [showNotesLoadingError, setShowNotesLoadingError] = useState(false);
 
@@ -25,7 +34,8 @@ const MainNotes = () => {
       try {
         setShowNotesLoadingError(false);
         setNotesLoading(true);
-        const notes = await NotesApi.fetchNotes();
+        const notes = await NotesApi.fetchNotes(user.token);
+        console.log(notes);
         setNotes(notes);
       } catch (error) {
         console.error(error);
@@ -39,7 +49,7 @@ const MainNotes = () => {
 
   async function deleteNote(note: NoteModel) {
     try {
-      await NotesApi.deleteNote(note._id);
+      await NotesApi.deleteNote(note._id, user.token);
       setNotes(notes.filter(existingNote => existingNote._id !== note._id));
     } catch (error) {
       console.error(error);
@@ -53,15 +63,14 @@ const MainNotes = () => {
       spacing={5}
       direction={smallScreen ? "column" : "row"}
     >
+      {!smallScreen &&
+        <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
+          <NewNoteTemplate onTemplateClicked={setAddNoteDialog} />
+        </Grid>
+      }
       {notes.slice().reverse().map((note, index) => (
         <React.Fragment key={index}>
-          {
-            index == 0 && !smallScreen &&
-            <Grid item xs={12} sm={6} md={4} lg={4} xl={3}>
-              <NewNoteTemplate onTemplateClicked={setAddNoteDialog} />
-            </Grid>
-          }
-          <Grid item xs={12} sm={6} md={4} lg={4} xl={3} key={note._id}>
+          <Grid item xs={12} sm={12} md={6} lg={4} xl={3} key={note._id}>
             <NoteComponent note={note} onNoteClicked={setNoteEdit} onDeleteNote={deleteNote} key={note._id} />
           </Grid>
         </React.Fragment>
@@ -70,19 +79,16 @@ const MainNotes = () => {
   );
 
   return (
-    <Box padding="10px 10px 0 10px">
-      <NoteOptions />
-      <Box m={{ xs: "2rem 1rem 2rem 1rem", sm: "2rem 2rem 2rem 2rem", md: "2rem 3rem 2rem 3rem", lg: "2rem 8rem 2rem 8rem", xl: "2rem 10rem 2rem 10rem" }}>
+    <Box maxHeight="100%" sx={{ overflowY: "hidden", ":hover": { overflowY: "auto" } }}>
+      <Box
+        m={{
+          xs: "1rem",
+          sm: "1rem 2rem 2rem 2rem",
+          md: "1rem 4rem 2rem 4rem",
+        }}>
         {notesLoading && <LoadingState />}
         {showNotesLoadingError && <p>Something went wrong. Please refresh the page.</p>}
-        {!notesLoading && !showNotesLoadingError &&
-          <>
-            {notes.length > 0
-              ? notesGrid
-              : <p>{"You don't have notes yet"}</p>
-            }
-          </>
-        }
+        {!notesLoading && !showNotesLoadingError && notesGrid}
         {showNoteDialog &&
           <NoteDialog
             open={showNoteDialog}
@@ -104,6 +110,7 @@ const MainNotes = () => {
           />
         }
       </Box>
+      {smallScreen && <Footer />}
       {smallScreen &&
         <Fab
           color="primary"

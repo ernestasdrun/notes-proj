@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { IconButton, InputAdornment, Stack, Typography, Box } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { IconButton, InputAdornment, Stack, Typography, Box, Alert } from "@mui/material";
 import TextInputField from "../components/form/TextInputField";
 import Footer from "../features/footer/Footer";
 import Navbar from "../features/navbar/Navbar";
@@ -9,8 +9,10 @@ import FormButton from "../components/form/FormButton";
 import * as UserApi from "../network/users_api";
 import { useNavigate } from "react-router-dom";
 import NavigationLink from "../components/links/NavigationLink";
-import { useDispatch } from "react-redux";
-import { setUser } from "../state";
+import { UnauthorizedError } from "../errors/http_errors";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { loginUser, reset } from "../features/auth/authSlice";
+import LoadingState from "../components/loading/LoadingState";
 
 const LoginPage = () => {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<UserApi.LoginCredentials>({
@@ -20,8 +22,12 @@ const LoginPage = () => {
     }
   });
 
+  const { user, isLoading, isSuccess, isError, message } = useAppSelector((state) => state.auth);
+
+  const [errorText, setErrorText] = useState<string | null>(null);
+
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -31,13 +37,32 @@ const LoginPage = () => {
     e.preventDefault();
   };
 
+  useEffect(() => {
+    if (isError) {
+      console.error(message)
+    }
+    if (isSuccess || user) {
+      navigate("/home");
+    }
+
+    dispatch(reset());
+  }, [user, isSuccess, isError, message, navigate, dispatch])
+
+  if (isLoading) {
+    <LoadingState />
+  }
+
   async function onSubmit(input: UserApi.LoginCredentials) {
     try {
-      await UserApi.login(input).then((user) => dispatch(setUser(user)));
-      navigate("/home");
+      dispatch(loginUser(input));
+
     } catch (error) {
+      if (error instanceof UnauthorizedError) {
+        setErrorText(error.message);
+      } else {
+        alert(error);
+      }
       console.error(error);
-      alert(error);
     }
   }
 
@@ -48,6 +73,9 @@ const LoginPage = () => {
         <Typography variant="h1" pt={10} pb={5}>Sign in</Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack flexDirection="column" alignItems="center">
+            {errorText &&
+              <Alert severity="error" variant="filled" sx={{ minWidth: "300px", margin: "0 10px 15px 10px" }}>{errorText}</Alert>
+            }
             <TextInputField
               isFullWidth={false}
               variant="outlined"

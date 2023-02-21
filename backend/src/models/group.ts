@@ -1,24 +1,25 @@
 import { InferSchemaType, model, Schema } from "mongoose";
 import User from "./user";
 
-const noteSchema = new Schema({
-    userId: {
+const groupSchema = new Schema({
+    owner: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "User",
     },
-    title: {
+    name: {
         type: String,
         required: true,
     },
-    text: {
+    categories: [{
         type: String,
-    },
-    category: {
-        type: String,
-    }
+    }],
+    users: [{
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    }]
 }, { timestamps: true });
 
-type Note = InferSchemaType<typeof noteSchema>;
+type Group = InferSchemaType<typeof groupSchema>;
 
-export default model<Note>("Note", noteSchema);
+export default model<Group>("Group", groupSchema);

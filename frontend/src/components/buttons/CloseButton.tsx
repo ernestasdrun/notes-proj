@@ -4,7 +4,7 @@ import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 interface CloseButtonProps {
-    size?: "small" | "inherit" | "medium" | "large" | undefined,
+    size?: "small" | "inherit" | "large" | "medium" | undefined,
     [x: string]: unknown,
 }
 

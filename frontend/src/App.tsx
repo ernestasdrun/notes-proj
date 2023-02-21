@@ -11,13 +11,10 @@ import LoginPage from "./pages/LoginPage";
 import UserHomePage from "./pages/UserHomePage";
 import SignUpPage from "./pages/SignUpPage";
 import RemindPasswordPage from "./pages/RemindPasswordPage";
-
-interface RootStateMode {
-  mode: PaletteMode;
-}
+import { selectMode } from "./styles/modeSlice";
 
 function App() {
-  const mode = useSelector<RootStateMode>((state) => state.mode);
+  const mode = useSelector(selectMode);
   const theme = useMemo(() => createTheme(themeSettings(mode as PaletteMode)), [mode]);
 
   return (
