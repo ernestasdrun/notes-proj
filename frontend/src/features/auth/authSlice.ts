@@ -9,10 +9,21 @@ interface RegisterUser {
     password: string,
 }
 
+interface ICategories {
+    categories: string[]
+}
+
+interface CategoryUpdateUser {
+    userId: string,
+    username: string,
+    categories: string[],
+}
+
 export interface IUser {
     userId: string;
     username: string;
     token: string;
+    categories: string[];
 }
 
 const initialState = {
@@ -56,7 +67,10 @@ export const authSlice = createSlice({
             state.isError = false
             state.isSuccess = false
             state.message = ""
-        }
+        },
+        resetCategories: (state, action: PayloadAction<CategoryUpdateUser>) => {
+            if (state.user) state.user.categories = action.payload.categories;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -98,5 +112,5 @@ export const authSlice = createSlice({
     },
 });
 
-export const { reset } = authSlice.actions;
+export const { reset, resetCategories } = authSlice.actions;
 export default authSlice.reducer;

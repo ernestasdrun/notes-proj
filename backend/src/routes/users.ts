@@ -7,6 +7,7 @@ const router = express.Router();
 router.get("/", requiresAuth, UserController.getAuthenticatedUser);
 router.post("/signup", UserController.signUp);
 router.post("/login", UserController.login);
-router.post("/logout", UserController.logout);
+router.patch("/addCat", requiresAuth, UserController.addCategory);
+router.patch("/remCat", requiresAuth, UserController.removeCategory);
 
 export default router;

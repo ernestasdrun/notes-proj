@@ -1,5 +1,6 @@
 import { User } from "../models/user";
 import { fetchData } from "./fetchData";
+import { CategoryInput } from "./groups_api";
 
 export interface SignUpCredentials {
     username: string,
@@ -45,8 +46,26 @@ export async function login(credentials: LoginCredentials): Promise<User> {
     return response.json();
 }
 
-export async function logout() {
-    await fetchData(`http://127.0.0.1:5001/api/users/logout`, { 
-        method: "POST",
-    })
+export async function addCategory(category: CategoryInput, token: string): Promise<User> {
+    const response = await fetchData(`http://127.0.0.1:5001/api/users/addCat`, { 
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify(category),
+    });
+    return response.json();
+}
+
+export async function removeCategory(category: CategoryInput, token: string): Promise<User> {
+    const response = await fetchData(`http://127.0.0.1:5001/api/users/remCat`, { 
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify(category),
+    });
+    return response.json();
 }

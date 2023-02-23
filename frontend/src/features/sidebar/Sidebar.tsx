@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Box, List, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from "@mui/material";
+import { Avatar, Box, Dialog, List, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from "@mui/material";
 import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import GroupsIcon from '@mui/icons-material/Groups';
 import { styled } from "@mui/system";
@@ -7,6 +7,8 @@ import { useAppSelector } from "../../app/hooks";
 import { IUser } from "../auth/authSlice";
 import * as GroupsApi from "../../network/groups_api";
 import { Group } from "../../models/group";
+import AddIcon from "@mui/icons-material/Add";
+import SmallDialog from "./SmallDialog";
 
 const StyledListButton = styled(ListItemButton)(({ theme }) => ({
     "&.MuiButtonBase-root": {
@@ -32,6 +34,8 @@ const Sidebar = () => {
 
     const [groupsLoading, setGroupsLoading] = useState(true);
     const [showGroupsLoadingError, setShowGroupsLoadingError] = useState(false);
+
+    const [showGroupDialog, setGroupDialog] = useState(false);
 
     const handleListItemClick = (
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -63,6 +67,16 @@ const Sidebar = () => {
 
     return (
         <Box maxHeight="100%" display="flex" flexDirection="column">
+            {showGroupDialog &&
+                <SmallDialog
+                    open={showGroupDialog}
+                    onDismiss={() => setGroupDialog(false)}
+                    onGroupSaved={(newGroup) => {
+                        setGroups([...groups, newGroup]);
+                        setGroupDialog(false);
+                    }}
+                />
+            }
             <List sx={{ p: "2px 0 0 0" }}>
                 <StyledListButton
                     disableRipple
@@ -77,7 +91,6 @@ const Sidebar = () => {
                 </StyledListButton>
 
                 <StyledListButton
-
                     disableRipple
                     divider
                     selected={selectedIndex === 1}
@@ -89,10 +102,19 @@ const Sidebar = () => {
                     <ListItemText primary="Groups" />
                 </StyledListButton>
 
-
             </List>
             <Box sx={{ maxHeight: "100%", overflowY: "hidden", ":hover": { overflowY: "auto" } }}>
                 <List dense disablePadding subheader={<ListSubheader>Groups</ListSubheader>}>
+                    <StyledListButton
+                        disableRipple
+                        divider
+                        onClick={() => setGroupDialog(true)}
+                    >
+                        <ListItemIcon>
+                            <AddIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Create group" />
+                    </StyledListButton>
                     {groups.map((group, index) =>
                         <StyledListButton
                             key={group._id}
@@ -102,7 +124,7 @@ const Sidebar = () => {
                             onClick={(event) => handleListItemClick(event, 2 + index)}
                         >
                             <ListItemAvatar>
-                                <Avatar alt="Placeholder" />
+                                <Avatar alt={group.name} src="/" sx={{ width: 30, height: 30 }} />
                             </ListItemAvatar>
                             <ListItemText primary={group.name} />
                         </StyledListButton>)}

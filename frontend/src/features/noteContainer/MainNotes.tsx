@@ -14,10 +14,12 @@ import { IUser } from "../auth/authSlice";
 
 interface MainNotesProps {
   notes: Note[],
+  searchValue: string,
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>,
+  setSearchValue: React.Dispatch<React.SetStateAction<string>>,
 }
 
-const MainNotes = ({ notes, setNotes }: MainNotesProps) => {
+const MainNotes = ({ notes, searchValue, setNotes, setSearchValue }: MainNotesProps) => {
   const user = useAppSelector((state) => state.auth.user) as IUser;
 
   const smallScreen = useMediaQuery('(max-width:600px)');
@@ -69,6 +71,7 @@ const MainNotes = ({ notes, setNotes }: MainNotesProps) => {
         </Grid>
       }
       {notes.slice().reverse().map((note, index) => (
+        note.title.includes(searchValue) &&
         <React.Fragment key={index}>
           <Grid item xs={12} sm={12} md={6} lg={4} xl={3} key={note._id}>
             <NoteComponent note={note} onNoteClicked={setNoteEdit} onDeleteNote={deleteNote} key={note._id} />

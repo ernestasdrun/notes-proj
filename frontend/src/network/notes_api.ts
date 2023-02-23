@@ -4,6 +4,7 @@ import { fetchData } from "./fetchData";
 export interface INoteInput {
     title: string,
     text?: string,
+    category: string,
 }
 
 export async function fetchNotes(token: string): Promise<Note[]> {

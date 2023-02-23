@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider, Slide, Dialog, DialogActions, DialogContent, DialogTitle, Box } from "@mui/material";
+import { Divider, Slide, Dialog, DialogActions, DialogContent, DialogTitle, Box, InputLabel, Select, MenuItem } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import { Note } from "../../../models/note";
 import { useForm } from "react-hook-form";
@@ -10,6 +10,7 @@ import FormButton from "../../../components/form/FormButton";
 import CloseButton from "../../../components/buttons/CloseButton";
 import { useAppSelector } from "../../../app/hooks";
 import { IUser } from "../../auth/authSlice";
+import FormSelect from "../../../components/form/FormSelect";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -34,6 +35,7 @@ const NoteDialog = ({ open = true, noteToEdit, onDismiss, onNoteSaved }: IAddNot
         defaultValues: {
             title: noteToEdit?.title || "",
             text: noteToEdit?.text || "",
+            category: noteToEdit?.category || "All",
         }
     });
 
@@ -86,6 +88,18 @@ const NoteDialog = ({ open = true, noteToEdit, onDismiss, onNoteSaved }: IAddNot
             <form onSubmit={handleSubmit(onSubmit)}>
                 <DialogContent>
                     <Box display="flex" flexDirection="column">
+                        <FormSelect
+                            isFullWidth={true}
+                            variant="outlined"
+                            label="Category"
+                            name="category"
+                            size="small"
+                            error={errors.category}
+                            register={register}
+                            registerOptions={{ required: "Required" }}
+                            sx={{ mb: 2 }}
+                            defaultValue={noteToEdit?.category || user.categories[0]}
+                        />
                         <TextInputField
                             isFullWidth={true}
                             variant="outlined"

@@ -5,14 +5,23 @@ import { AuthRequest } from "../middleware/auth";
 import NoteModel from "../models/note";
 import { assertIsDefined } from "../util/assertIsDefined";
 import { UserReq } from "./users";
+import UserModel from "../models/user";
 
 export const getNotes: RequestHandler = async (req: AuthRequest, res, next) => {
     const { userId } = <UserReq> req.user;
+    const groupId = req.body.groupId;
 
     try {
         assertIsDefined(userId);
 
+        /*if (groupId) {
+            const notes = await NoteModel.find({: userId}).exec();
+        } else {
+            const notes = await NoteModel.find({userId: userId}).exec();
+        }*/
+
         const notes = await NoteModel.find({userId: userId}).exec();
+
         res.status(200).json(notes);
     } catch (error) {
         next(error);

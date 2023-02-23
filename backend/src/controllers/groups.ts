@@ -61,9 +61,9 @@ export const createGroup: RequestHandler = async (req: AuthRequest, res, next) =
             name: name,
             categories: ["All"],
             users: [userId]
-        }).then(group => {
-            UserModel.updateOne({ _id: userId }, { $push: { groups: group._id } }).exec();
         });
+
+        await UserModel.updateOne({ _id: userId }, { $push: { groups: newGroup._id } }).exec();
 
         res.status(200).json(newGroup);
 
@@ -111,7 +111,7 @@ export const deleteGroup: RequestHandler = async (req: AuthRequest, res, next) =
     }
 }
 
-export const addCategoryToGroup: RequestHandler = async (req: AuthRequest, res, next) => {
+export const addCategory: RequestHandler = async (req: AuthRequest, res, next) => {
     const { userId } = <UserReq>req.user;
 
     const groupId = req.params.groupId;

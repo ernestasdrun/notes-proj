@@ -15,7 +15,7 @@ const CategoryButtonMobile = () => {
     <StyledButtons
       disableRipple
       size="small"
-      sx={{ height: "inherit" }}
+      sx={{ height: "37px" }}
     >
       <Button variant="outlined">Hello <ArrowDropDownIcon /></Button>
       <Button variant="outlined" sx={{ padding: 0 }}>

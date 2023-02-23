@@ -13,7 +13,7 @@ router.delete("/:groupId", GroupsController.deleteGroup);
 router.patch("/addUser/:groupId", GroupsController.addUserToGroup);
 router.patch("/remUser/:groupId", GroupsController.removeUserFromGroup);
 
-router.patch("/addCat/:groupId", GroupsController.addCategoryToGroup);
+router.patch("/addCat/:groupId", GroupsController.addCategory);
 router.patch("/remCat/:groupId", GroupsController.removeCategoryFromGroup);
 
 export default router;

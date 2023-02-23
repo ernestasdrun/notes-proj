@@ -6,19 +6,21 @@ import { Note } from "../../../../models/note";
 
 interface SortByProps {
   notes: Note[],
+  originalNotes: Note[],
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>,
+  setOriginalNotes: React.Dispatch<React.SetStateAction<Note[]>>,
 }
 
 const SortButton = styled(Button)(({ theme }) => ({
   padding: "0 1px 0 1px",
   minWidth: "90px",
-  height: "inherit",
+  height: "37px",
   ":focus-visible": {
     outline: `3px solid ${theme.palette.border.main}`,
   },
 }));
 
-const SortBy = ({ notes, setNotes }: SortByProps) => {
+const SortBy = ({ notes, originalNotes, setNotes, setOriginalNotes }: SortByProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -45,6 +47,22 @@ const SortBy = ({ notes, setNotes }: SortByProps) => {
     });
 
     setNotes(sortedNotes)
+
+    const sortedOriginalNotes = [...originalNotes].sort((a: Note, b: Note) => {
+      const dateA = new Date(byCreated ? a.createdAt : a.updatedAt).getTime();
+      const dateB = new Date(byCreated ? b.createdAt : b.updatedAt).getTime();
+
+      if (order === "desc") {
+        return dateB < dateA ? 1 : -1;
+      } else if (order === "asc") {
+        return dateB > dateA ? 1 : -1;
+      } else {
+        return 0;
+      }
+    });
+
+
+    setOriginalNotes(sortedOriginalNotes)
   };
 
   return (

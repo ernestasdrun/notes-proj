@@ -1,6 +1,8 @@
 import React from "react";
-import { FormHelperText, styled, OutlinedInput, FormControl, InputLabel } from "@mui/material";
+import { FormHelperText, styled, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { FieldError, RegisterOptions, UseFormRegister } from "react-hook-form";
+import { useAppSelector } from "../../app/hooks";
+import { IUser } from "../../features/auth/authSlice";
 
 declare module "@mui/material/InputBase" {
     interface InputBasePropsColorOverrides {
@@ -14,7 +16,7 @@ declare module "@mui/material/FormLabel" {
     }
 }
 
-interface TextInputFieldProps {
+interface FormSelectProps {
     variant?: "standard" | "outlined" | "filled" | undefined,
     isFullWidth: boolean,
     name: string,
@@ -26,22 +28,29 @@ interface TextInputFieldProps {
     [x: string]: unknown,
 }
 
-const StyledTextField = styled(OutlinedInput)(({ theme }) => ({
+const StyledSelect = styled(Select)(({ theme }) => ({
     borderRadius: "12px",
 }));
 
-const TextInputField = ({ variant, isFullWidth, name, label, register, registerOptions, error, errMessage, ...props }: TextInputFieldProps) => {
-    return (
+const FormSelect = ({ variant, isFullWidth, name, label, register, registerOptions, error, errMessage, ...props }: FormSelectProps) => {
+    const user = useAppSelector((state) => state.auth.user) as IUser;
 
+    return (
         <FormControl sx={{ m: "8px 0", minWidth: '25ch' }} fullWidth={isFullWidth} variant={variant}>
             <InputLabel size="small" color="fieldFocus" error={!!error}>{label}</InputLabel>
-            <StyledTextField
+            <StyledSelect
                 {...props}
                 label={label}
                 {...register(name, registerOptions)}
                 error={!!error}
                 color="fieldFocus"
-            />
+            >
+                {user &&
+                    user.categories.map((category, index) => (
+                        <MenuItem key={index} value={category}>{category}</MenuItem>
+                    ))
+                }
+            </StyledSelect>
             {error?.type == "required" &&
                 <FormHelperText
                     error
@@ -51,4 +60,4 @@ const TextInputField = ({ variant, isFullWidth, name, label, register, registerO
     );
 };
 
-export default TextInputField;
+export default FormSelect;

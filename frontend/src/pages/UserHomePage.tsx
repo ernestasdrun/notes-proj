@@ -13,6 +13,7 @@ import { Note } from "../models/note";
 const UserHomePage = () => {
   const user = useAppSelector((state) => state.auth.user);
   const [notes, setNotes] = useState<Note[]>([]);
+  const [searchValue, setSearchValue] = useState("");
 
   const navigate = useNavigate();
   const theme = useTheme<Theme>();
@@ -56,7 +57,7 @@ const UserHomePage = () => {
           </Box>
           :
           <Box
-            minWidth="170px"
+            minWidth="180px"
             sx={{
               gridArea: "sidebar",
               boxShadow: `1px 0 10px 0 ${theme.palette.mode === "dark" ? "#131313" : "#354b39f8"}`,
@@ -64,14 +65,14 @@ const UserHomePage = () => {
             <Sidebar />
           </Box>
         }
-        <Box p={2} sx={{ gridArea: "options" }}>
-          <NoteOptions notes={notes} setNotes={setNotes}/>
+        <Box sx={{ minWidth: 0, gridArea: "options" }}>
+          <NoteOptions notes={notes} setNotes={setNotes} setSearchValue={setSearchValue}/>
         </Box>
         <Box sx={{ gridArea: "divider" }}>
           <Divider flexItem />
         </Box>
         <Box sx={{ gridArea: "main", overflowY: smallScreen ? "auto" : undefined }}>
-          <MainNotes notes={notes} setNotes={setNotes}/>
+          <MainNotes notes={notes} searchValue={searchValue} setNotes={setNotes} setSearchValue={setSearchValue}/>
         </Box>
       </Box>
       {!smallScreen && <Footer />}

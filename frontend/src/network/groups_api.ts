@@ -2,6 +2,14 @@ import { Group } from "../models/group";
 import { User } from "../models/user";
 import { fetchData } from "./fetchData";
 
+export interface GroupInput {
+    name: string,
+}
+
+export interface CategoryInput {
+    name: string,
+}
+
 export async function fetchGroups(token: string): Promise<Group[]> {
     const response = await fetchData(`http://localhost:5001/api/groups`, {
         method: "GET",
@@ -22,14 +30,14 @@ export async function fetchGroup(groupId: string, token: string): Promise<Group>
     return response.json();
 }
 
-export async function createGroup(name: string, token: string): Promise<Group> {
+export async function createGroup(name: GroupInput, token: string): Promise<Group> {
     const response = await fetchData(`http://localhost:5001/api/groups`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify({ name: name }),
+        body: JSON.stringify(name),
     });
     return response.json();
 }
@@ -73,26 +81,26 @@ export async function removeUserFromGroup(groupId: string, token: string): Promi
     return response.json();
 }
 
-export async function addCategoryToGroup(category: string, groupId: string, token: string): Promise<Group> {
+export async function addCategoryToGroup(category: CategoryInput, groupId: string, token: string): Promise<Group> {
     const response = await fetchData(`http://localhost:5001/api/groups/addCat/` + groupId, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify({ category: category }),
+        body: JSON.stringify(category),
     });
     return response.json();
 }
 
-export async function removeCategoryFromGroup(category: string, groupId: string, token: string): Promise<Group> {
+export async function removeCategoryFromGroup(category: CategoryInput, groupId: string, token: string): Promise<Group> {
     const response = await fetchData(`http://localhost:5001/api/groups/remCat/` + groupId, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify({ category: category }),
+        body: JSON.stringify(category),
     });
     return response.json();
 }
