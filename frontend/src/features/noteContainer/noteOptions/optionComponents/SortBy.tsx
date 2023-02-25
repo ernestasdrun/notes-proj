@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SortRoundedIcon from "@mui/icons-material/SortRounded";
-import { Button, Menu, MenuItem } from "@mui/material";
+import { Button, ListItemText, Menu, MenuItem, Radio } from "@mui/material";
 import { styled } from "@mui/system";
 import { Note } from "../../../../models/note";
+import { Group } from "../../../../models/group";
 
 interface SortByProps {
   notes: Note[],
   originalNotes: Note[],
+  currentContent: Group | null | undefined,
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>,
   setOriginalNotes: React.Dispatch<React.SetStateAction<Note[]>>,
 }
@@ -20,9 +22,11 @@ const SortButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const SortBy = ({ notes, originalNotes, setNotes, setOriginalNotes }: SortByProps) => {
+const SortBy = ({ notes, originalNotes, currentContent, setNotes, setOriginalNotes }: SortByProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  const [selectedValue, setSelectedValue] = React.useState("createdDesc");
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -32,7 +36,12 @@ const SortBy = ({ notes, originalNotes, setNotes, setOriginalNotes }: SortByProp
     setAnchorEl(null);
   };
 
-  const sortCreatedDate = (order: string, byCreated: boolean) => {
+  useEffect(() => {
+    setSelectedValue("createdDesc");
+  }, [currentContent])
+  
+
+  const sortCreatedDate = (value: string, order: string, byCreated: boolean) => {
     const sortedNotes = [...notes].sort((a: Note, b: Note) => {
       const dateA = new Date(byCreated ? a.createdAt : a.updatedAt).getTime();
       const dateB = new Date(byCreated ? b.createdAt : b.updatedAt).getTime();
@@ -61,8 +70,9 @@ const SortBy = ({ notes, originalNotes, setNotes, setOriginalNotes }: SortByProp
       }
     });
 
-
+    setSelectedValue(value);
     setOriginalNotes(sortedOriginalNotes)
+    handleClose();
   };
 
   return (
@@ -83,10 +93,38 @@ const SortBy = ({ notes, originalNotes, setNotes, setOriginalNotes }: SortByProp
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={() => sortCreatedDate("asc", true)}>Ascending (Date created)</MenuItem>
-        <MenuItem onClick={() => sortCreatedDate("desc", true)}>Descending (Date created)</MenuItem>
-        <MenuItem onClick={() => sortCreatedDate("asc", false)}>Ascending (Date edited)</MenuItem>
-        <MenuItem onClick={() => sortCreatedDate("desc", false)}>Descending (Date edited)</MenuItem>
+        <MenuItem onClick={() => sortCreatedDate("createdAsc", "asc", true)} sx={{paddingRight: "5px", borderBottom: "1px solid #808080"}}>
+          <ListItemText>Ascending (Date created)</ListItemText>
+          <Radio
+            checked={selectedValue === "createdAsc"}
+            value="createdAsc"
+            name="radio-buttons"
+            inputProps={{ "aria-label": "created ascending" }} />
+        </MenuItem>
+        <MenuItem onClick={() => sortCreatedDate("createdDesc", "desc", true)} sx={{paddingRight: "5px", borderBottom: "1px solid #808080"}}>
+          <ListItemText>Descending (Date created)</ListItemText>
+          <Radio
+            checked={selectedValue === "createdDesc"}
+            value="createdDesc"
+            name="radio-buttons"
+            inputProps={{ "aria-label": "created descending" }} />
+        </MenuItem>
+        <MenuItem onClick={() => sortCreatedDate("editedAsc", "asc", false)} sx={{paddingRight: "5px", borderBottom: "1px solid #808080"}}>
+          <ListItemText>Ascending (Date edited)</ListItemText>
+          <Radio
+            checked={selectedValue === "editedAsc"}
+            value="editedAsc"
+            name="radio-buttons"
+            inputProps={{ "aria-label": "edited ascending" }} />
+        </MenuItem>
+        <MenuItem onClick={() => sortCreatedDate("editedDesc", "desc", false)} sx={{paddingRight: "5px"}}>
+          <ListItemText>Descending (Date edited)</ListItemText>
+          <Radio
+            checked={selectedValue === "editedDesc"}
+            value="editedDesc"
+            name="radio-buttons"
+            inputProps={{ "aria-label": "edited descending" }} />
+        </MenuItem>
       </Menu>
     </>
   );

@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import authService from "./authService";
 import * as UserApi from "../../network/users_api";
-import { AsyncThunkAction } from '@reduxjs/toolkit';
 
 interface RegisterUser {
     username: string,
@@ -17,6 +16,15 @@ interface CategoryUpdateUser {
     userId: string,
     username: string,
     categories: string[],
+}
+
+interface CategoryUpdatGroup {
+    _id: string,
+    name: string,
+    categories: string[],
+    users: string[],
+    createdAt: string,
+    updatedAt: string,
 }
 
 export interface IUser {
@@ -68,7 +76,7 @@ export const authSlice = createSlice({
             state.isSuccess = false
             state.message = ""
         },
-        resetCategories: (state, action: PayloadAction<CategoryUpdateUser>) => {
+        resetCategories: (state, action: PayloadAction<CategoryUpdateUser | CategoryUpdatGroup>) => {
             if (state.user) state.user.categories = action.payload.categories;
         },
     },

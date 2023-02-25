@@ -3,6 +3,7 @@ import { FormHelperText, styled, FormControl, InputLabel, Select, MenuItem } fro
 import { FieldError, RegisterOptions, UseFormRegister } from "react-hook-form";
 import { useAppSelector } from "../../app/hooks";
 import { IUser } from "../../features/auth/authSlice";
+import { Group } from "../../models/group";
 
 declare module "@mui/material/InputBase" {
     interface InputBasePropsColorOverrides {
@@ -25,6 +26,7 @@ interface FormSelectProps {
     registerOptions?: RegisterOptions,
     error?: FieldError,
     errMessage?: string,
+    categoryContainer: IUser | Group,
     [x: string]: unknown,
 }
 
@@ -32,7 +34,7 @@ const StyledSelect = styled(Select)(({ theme }) => ({
     borderRadius: "12px",
 }));
 
-const FormSelect = ({ variant, isFullWidth, name, label, register, registerOptions, error, errMessage, ...props }: FormSelectProps) => {
+const FormSelect = ({ variant, isFullWidth, name, label, register, registerOptions, error, errMessage, categoryContainer, ...props }: FormSelectProps) => {
     const user = useAppSelector((state) => state.auth.user) as IUser;
 
     return (
@@ -45,8 +47,8 @@ const FormSelect = ({ variant, isFullWidth, name, label, register, registerOptio
                 error={!!error}
                 color="fieldFocus"
             >
-                {user &&
-                    user.categories.map((category, index) => (
+                {categoryContainer &&
+                    categoryContainer.categories.map((category, index) => (
                         <MenuItem key={index} value={category}>{category}</MenuItem>
                     ))
                 }

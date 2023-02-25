@@ -11,20 +11,24 @@ import AddIcon from "@mui/icons-material/Add";
 import Footer from "../footer/Footer";
 import { useAppSelector } from "../../app/hooks";
 import { IUser } from "../auth/authSlice";
+import { Group } from "../../models/group";
 
 interface MainNotesProps {
   notes: Note[],
   searchValue: string,
+  currentContent?: Group,
+  categoryContainer: IUser | Group,
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>,
   setSearchValue: React.Dispatch<React.SetStateAction<string>>,
+  setCategoryContainer: React.Dispatch<React.SetStateAction<IUser | Group>>
+  ,
 }
 
-const MainNotes = ({ notes, searchValue, setNotes, setSearchValue }: MainNotesProps) => {
+const MainNotes = ({ notes, searchValue, currentContent, categoryContainer, setNotes, setSearchValue, setCategoryContainer }: MainNotesProps) => {
   const user = useAppSelector((state) => state.auth.user) as IUser;
 
   const smallScreen = useMediaQuery('(max-width:600px)');
 
-  //const [notes, setNotes] = useState<Note[]>([]);
   const [notesLoading, setNotesLoading] = useState(true);
   const [showNotesLoadingError, setShowNotesLoadingError] = useState(false);
 
@@ -36,8 +40,12 @@ const MainNotes = ({ notes, searchValue, setNotes, setSearchValue }: MainNotesPr
       try {
         setShowNotesLoadingError(false);
         setNotesLoading(true);
-        const notes = await NotesApi.fetchNotes(user.token);
-        console.log(notes);
+        let notes: Note[] | null = null;
+        if (currentContent) {
+          notes = await NotesApi.fetchNotes(user.token, currentContent._id);
+        } else {
+          notes = await NotesApi.fetchNotes(user.token);
+        }
         setNotes(notes);
       } catch (error) {
         console.error(error);
@@ -47,11 +55,11 @@ const MainNotes = ({ notes, searchValue, setNotes, setSearchValue }: MainNotesPr
       }
     }
     loadNotes();
-  }, []);
+  }, [currentContent]);
 
   async function deleteNote(note: NoteModel) {
     try {
-      await NotesApi.deleteNote(note._id, user.token);
+      await NotesApi.deleteNote(note._id, user.token, currentContent?._id);
       setNotes(notes.filter(existingNote => existingNote._id !== note._id));
     } catch (error) {
       console.error(error);
@@ -94,6 +102,7 @@ const MainNotes = ({ notes, searchValue, setNotes, setSearchValue }: MainNotesPr
         {!notesLoading && !showNotesLoadingError && notesGrid}
         {showNoteDialog &&
           <NoteDialog
+            categoryContainer={categoryContainer}
             open={showNoteDialog}
             onDismiss={() => setAddNoteDialog(false)}
             onNoteSaved={(newNote) => {
@@ -104,6 +113,7 @@ const MainNotes = ({ notes, searchValue, setNotes, setSearchValue }: MainNotesPr
         }
         {noteEdit &&
           <NoteDialog
+            categoryContainer={categoryContainer}
             noteToEdit={noteEdit}
             onDismiss={() => setNoteEdit(null)}
             onNoteSaved={(updatedNote) => {

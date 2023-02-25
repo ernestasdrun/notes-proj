@@ -9,17 +9,28 @@ import NoteOptions from "../features/noteContainer/noteOptions/NoteOptions";
 import { useAppSelector } from "../app/hooks";
 import { useNavigate } from "react-router-dom";
 import { Note } from "../models/note";
+import { Group } from "../models/group";
+import { IUser } from "../features/auth/authSlice";
 
 const UserHomePage = () => {
-  const user = useAppSelector((state) => state.auth.user);
+  const user = useAppSelector((state) => state.auth.user) as IUser;
   const [notes, setNotes] = useState<Note[]>([]);
+  const [originalNotes, setOriginalNotes] = useState<Note[]>(notes);
+
   const [searchValue, setSearchValue] = useState("");
+
+  const [currentContent, setCurrentContent] = useState<Group | null>(null);
+  const [categoryContainer, setCategoryContainer] = useState<IUser | Group>(user);
 
   const navigate = useNavigate();
   const theme = useTheme<Theme>();
   const [alignment, setAlignment] = useState("myNotes");
   const smallScreen = useMediaQuery("(max-width:600px)");
   const largeScreen = useMediaQuery("(max-width:1200px)");
+
+  useEffect(() => {
+    setSearchValue("");
+  }, [currentContent])
 
   useEffect(() => {
     if (!user) {
@@ -62,18 +73,34 @@ const UserHomePage = () => {
               gridArea: "sidebar",
               boxShadow: `1px 0 10px 0 ${theme.palette.mode === "dark" ? "#131313" : "#354b39f8"}`,
             }}>
-            <Sidebar />
+            <Sidebar currentContent={currentContent} setCurrentContent={setCurrentContent} />
           </Box>
         }
-        <Box sx={{ minWidth: 0, gridArea: "options" }}>
-          <NoteOptions notes={notes} setNotes={setNotes} setSearchValue={setSearchValue}/>
-        </Box>
-        <Box sx={{ gridArea: "divider" }}>
-          <Divider flexItem />
-        </Box>
-        <Box sx={{ gridArea: "main", overflowY: smallScreen ? "auto" : undefined }}>
-          <MainNotes notes={notes} searchValue={searchValue} setNotes={setNotes} setSearchValue={setSearchValue}/>
-        </Box>
+        {!currentContent ?
+          <>
+            <Box sx={{ minWidth: 0, gridArea: "options" }}>
+              <NoteOptions originalNotes={originalNotes} setOriginalNotes={setOriginalNotes} categoryContainer={categoryContainer} searchValue={searchValue} setCategoryContainer={setCategoryContainer} notes={notes} setNotes={setNotes} setSearchValue={setSearchValue} setCurrentContent={setCurrentContent} />
+            </Box>
+            <Box sx={{ gridArea: "divider" }}>
+              <Divider flexItem />
+            </Box>
+            <Box sx={{ gridArea: "main", overflowY: smallScreen ? "auto" : undefined }}>
+              <MainNotes categoryContainer={categoryContainer} setCategoryContainer={setCategoryContainer} notes={notes} searchValue={searchValue} setNotes={setNotes} setSearchValue={setSearchValue} />
+            </Box>
+          </>
+          :
+          <>
+            <Box sx={{ minWidth: 0, gridArea: "options" }}>
+              <NoteOptions originalNotes={originalNotes} setOriginalNotes={setOriginalNotes} categoryContainer={categoryContainer} searchValue={searchValue} setCategoryContainer={setCategoryContainer} notes={notes} setNotes={setNotes} setSearchValue={setSearchValue} currentContent={currentContent} setCurrentContent={setCurrentContent} />
+            </Box>
+            <Box sx={{ gridArea: "divider" }}>
+              <Divider flexItem />
+            </Box>
+            <Box sx={{ gridArea: "main", overflowY: smallScreen ? "auto" : undefined }}>
+              <MainNotes categoryContainer={categoryContainer} setCategoryContainer={setCategoryContainer} notes={notes} searchValue={searchValue} setNotes={setNotes} setSearchValue={setSearchValue} currentContent={currentContent} />
+            </Box>
+          </>
+        }
       </Box>
       {!smallScreen && <Footer />}
     </Box>

@@ -7,18 +7,20 @@ export interface INoteInput {
     category: string,
 }
 
-export async function fetchNotes(token: string): Promise<Note[]> {
-    const response = await fetchData(`http://localhost:5001/api/notes`, {
-        method: "GET",
+export async function fetchNotes(token: string, groupId?: string): Promise<Note[]> {
+    const response = await fetchData(`http://localhost:5001/api/notes/all`, {
+        method: "POST",
         headers: {
+            "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
-        }
+        },
+        body: JSON.stringify({groupId: groupId}),
     });
     return response.json();
 }
 
-export async function createNote(note: INoteInput, token: string): Promise<Note> {
-    const response = await fetchData(`http://localhost:5001/api/notes`, {
+export async function createNote(note: INoteInput, token: string, groupId?: string): Promise<Note> {
+    const response = await fetchData(`http://localhost:5001/api/notes/${groupId ? groupId : ""}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -41,8 +43,8 @@ export async function updateNote(noteId: string, note: INoteInput, token: string
     return response.json();
 }
 
-export async function deleteNote(noteId: string, token: string) {
-    await fetchData(`http://localhost:5001/api/notes/` + noteId, {
+export async function deleteNote(noteId: string, token: string, groupId?: string) {
+    await fetchData(`http://localhost:5001/api/notes/` + noteId + `/${groupId ? groupId : ""}`, {
         method: "DELETE",
         headers: {
             "Authorization": `Bearer ${token}`,

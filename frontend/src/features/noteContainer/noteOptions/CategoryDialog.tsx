@@ -3,13 +3,14 @@ import { Divider, Slide, Dialog, DialogActions, DialogContent, DialogTitle, Box 
 import { TransitionProps } from "@mui/material/transitions";
 import { useForm } from "react-hook-form";
 import TextInputField from "../../../components/form/TextInputField";
-import { Group } from "../../../models/group";
 import { IUser } from "../../auth/authSlice";
 import { useAppSelector } from "../../../app/hooks";
 import CloseButton from "../../../components/buttons/CloseButton";
 import FormButton from "../../../components/form/FormButton";
 import * as UserApi from "../../../network/users_api";
+import * as GroupApi from "../../../network/groups_api";
 import { CategoryInput } from "../../../network/groups_api";
+import { Group } from "../../../models/group";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -22,11 +23,12 @@ const Transition = React.forwardRef(function Transition(
 
 interface CategoryDialogProps {
     open?: boolean,
+    categoryContainer: IUser | Group,
     onDismiss: () => void,
-    onCategorySaved: (user: IUser) => void,
+    onCategorySaved: (container: IUser | Group) => void,
 }
 
-const SmallDialog = ({ open = true, onDismiss, onCategorySaved }: CategoryDialogProps) => {
+const CategoryDialog = ({ open = true, categoryContainer, onDismiss, onCategorySaved }: CategoryDialogProps) => {
     const user = useAppSelector((state) => state.auth.user) as IUser;
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<CategoryInput>({
@@ -35,10 +37,18 @@ const SmallDialog = ({ open = true, onDismiss, onCategorySaved }: CategoryDialog
         }
     });
 
+    function isGroup(categoryContainer: IUser | Group): categoryContainer is Group {
+        return (categoryContainer as Group)._id !== undefined && typeof (categoryContainer as Group)._id === "string";
+      }
+
     async function onSubmit(input: CategoryInput) {
+        let categoryResponse: IUser | Group;
         try {
-            //let groupResponse: Group;
-            const categoryResponse = await UserApi.addCategory(input, user.token);
+            if (isGroup(categoryContainer)) {
+                categoryResponse = await GroupApi.addCategoryToGroup(input, categoryContainer._id, user.token);
+            } else {
+                categoryResponse = await UserApi.addCategory(input, user.token);
+            }
 
             onCategorySaved(categoryResponse);
         } catch (error) {
@@ -104,4 +114,4 @@ const SmallDialog = ({ open = true, onDismiss, onCategorySaved }: CategoryDialog
     );
 };
 
-export default SmallDialog;
+export default CategoryDialog;

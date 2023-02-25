@@ -37,7 +37,6 @@ const SmallDialog = ({ open = true, onDismiss, onGroupSaved }: IGroupDialogProps
 
     async function onSubmit(input: GroupInput) {
         try {
-            //let groupResponse: Group;
             const groupResponse = await GroupApi.createGroup(input, user.token);
 
             onGroupSaved(groupResponse);

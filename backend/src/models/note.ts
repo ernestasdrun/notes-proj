@@ -7,6 +7,10 @@ const noteSchema = new Schema({
         required: true,
         ref: "User",
     },
+    groupId: {
+        type: Schema.Types.ObjectId,
+        ref: "Group",
+    },
     title: {
         type: String,
         required: true,
@@ -19,6 +23,6 @@ const noteSchema = new Schema({
     }
 }, { timestamps: true });
 
-type Note = InferSchemaType<typeof noteSchema>;
+export type Note = InferSchemaType<typeof noteSchema>;
 
 export default model<Note>("Note", noteSchema);

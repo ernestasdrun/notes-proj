@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import env from "../util/validateEnv";
 import { AuthRequest } from "../middleware/auth";
 import { assertIsDefined } from "../util/assertIsDefined";
+import NoteModel from "../models/note";
 
 export interface UserReq {
     userId: string,
@@ -169,6 +170,7 @@ export const removeCategory: RequestHandler = async (req: AuthRequest, res, next
             throw createHttpError(401, "User does not have this category");
         }
 
+        const updatedNotes = await NoteModel.updateMany({userId: userId, groupId: null, category: category}, {$set: {category: "All"}});
         const updatedUser = await UserModel.findOneAndUpdate({ _id: userId }, { $pull: { categories: category } }, { new: true }).exec();
 
         res.status(200).json(updatedUser);

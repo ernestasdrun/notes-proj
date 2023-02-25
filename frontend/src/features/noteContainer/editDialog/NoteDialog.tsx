@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider, Slide, Dialog, DialogActions, DialogContent, DialogTitle, Box, InputLabel, Select, MenuItem } from "@mui/material";
+import { Divider, Slide, Dialog, DialogActions, DialogContent, DialogTitle, Box } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import { Note } from "../../../models/note";
 import { useForm } from "react-hook-form";
@@ -11,6 +11,8 @@ import CloseButton from "../../../components/buttons/CloseButton";
 import { useAppSelector } from "../../../app/hooks";
 import { IUser } from "../../auth/authSlice";
 import FormSelect from "../../../components/form/FormSelect";
+import { Group } from "../../../models/group";
+import { isGroup } from "../../../utils/isGroup";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -24,11 +26,12 @@ const Transition = React.forwardRef(function Transition(
 interface IAddNoteDialogProps {
     open?: boolean,
     noteToEdit?: Note,
+    categoryContainer: IUser | Group,
     onDismiss: () => void,
     onNoteSaved: (note: Note) => void,
 }
 
-const NoteDialog = ({ open = true, noteToEdit, onDismiss, onNoteSaved }: IAddNoteDialogProps) => {
+const NoteDialog = ({ open = true, noteToEdit, categoryContainer, onDismiss, onNoteSaved }: IAddNoteDialogProps) => {
     const user = useAppSelector((state) => state.auth.user) as IUser;
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<INoteInput>({
@@ -42,10 +45,15 @@ const NoteDialog = ({ open = true, noteToEdit, onDismiss, onNoteSaved }: IAddNot
     async function onSubmit(input: INoteInput) {
         try {
             let noteResponse: Note;
+
             if (noteToEdit) {
                 noteResponse = await NotesApi.updateNote(noteToEdit._id, input, user.token);
             } else {
-                noteResponse = await NotesApi.createNote(input, user.token);
+                if (isGroup(categoryContainer)) {
+                    noteResponse = await NotesApi.createNote(input, user.token, categoryContainer._id);
+                } else {
+                    noteResponse = await NotesApi.createNote(input, user.token);
+                }
             }
 
             onNoteSaved(noteResponse);
@@ -89,6 +97,7 @@ const NoteDialog = ({ open = true, noteToEdit, onDismiss, onNoteSaved }: IAddNot
                 <DialogContent>
                     <Box display="flex" flexDirection="column">
                         <FormSelect
+                            categoryContainer={categoryContainer}
                             isFullWidth={true}
                             variant="outlined"
                             label="Category"
@@ -98,7 +107,7 @@ const NoteDialog = ({ open = true, noteToEdit, onDismiss, onNoteSaved }: IAddNot
                             register={register}
                             registerOptions={{ required: "Required" }}
                             sx={{ mb: 2 }}
-                            defaultValue={noteToEdit?.category || user.categories[0]}
+                            defaultValue={noteToEdit?.category || categoryContainer.categories[0]}
                         />
                         <TextInputField
                             isFullWidth={true}

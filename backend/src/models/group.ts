@@ -14,6 +14,10 @@ const groupSchema = new Schema({
     categories: [{
         type: String,
     }],
+    notes: [{
+        type: Schema.Types.ObjectId,
+        ref: "Note",
+    }],
     users: [{
         type: Schema.Types.ObjectId,
         ref: "User",

@@ -6,6 +6,7 @@ import { assertIsDefined } from "../util/assertIsDefined";
 import createHttpError from "http-errors";
 import GroupModel from "../models/group";
 import UserModel from "../models/user";
+import NoteModel from "../models/note";
 
 export const getGroup: RequestHandler = async (req: AuthRequest, res, next) => {
     const { userId } = <UserReq>req.user;
@@ -179,7 +180,8 @@ export const removeCategoryFromGroup: RequestHandler = async (req: AuthRequest, 
             throw createHttpError(401, "Group does not have this category");
         }
 
-        const updatedGroup = await GroupModel.updateOne({ _id: groupId }, { $pull: { categories: category } }).exec();
+        const updatedNotes = await NoteModel.updateMany({ groupId: groupId, category: category }, { $set: { category: "All" } });
+        const updatedGroup = await GroupModel.findOneAndUpdate({ _id: groupId }, { $pull: { categories: category } }, { new: true }).exec();
 
         res.status(200).json(updatedGroup);
 

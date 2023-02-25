@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { styled, Input, InputAdornment, useMediaQuery } from "@mui/material";
+import React, { useState, useRef, useEffect } from "react";
+import { styled, Input, InputAdornment } from "@mui/material";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 
 interface SearchBarProps {
+    searchValue: string,
     setSearchValue: React.Dispatch<React.SetStateAction<string>>,
 }
 
@@ -14,10 +15,11 @@ const StyledSearchBar = styled(Input)(({ theme }) => ({
     backgroundColor: theme.palette.search.background,
 }));
 
-const SearchBar = ({ setSearchValue }: SearchBarProps) => {
+const SearchBar = ({ searchValue, setSearchValue }: SearchBarProps) => {
 
     return (
         <StyledSearchBar
+            value={searchValue}
             type="search"
             placeholder="Search..."
             autoComplete="off"

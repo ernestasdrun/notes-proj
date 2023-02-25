@@ -10,6 +10,11 @@ import { Group } from "../../models/group";
 import AddIcon from "@mui/icons-material/Add";
 import SmallDialog from "./SmallDialog";
 
+interface SidebarProps {
+    currentContent: Group | null,
+    setCurrentContent: React.Dispatch<React.SetStateAction<Group | null>>,
+}
+
 const StyledListButton = styled(ListItemButton)(({ theme }) => ({
     "&.MuiButtonBase-root": {
         backgroundColor: theme.palette.mode === "dark" ? "#2c2c2c" : "#cbe0c4",
@@ -25,7 +30,7 @@ const StyledListButton = styled(ListItemButton)(({ theme }) => ({
     },
 }));
 
-const Sidebar = () => {
+const Sidebar = ({ currentContent, setCurrentContent }: SidebarProps) => {
     const user = useAppSelector((state) => state.auth.user) as IUser;
 
     const [groups, setGroups] = useState<Group[]>([]);
@@ -50,7 +55,6 @@ const Sidebar = () => {
                 setShowGroupsLoadingError(false);
                 setGroupsLoading(true);
                 const groups = await GroupsApi.fetchGroups(user.token);
-                console.log(groups);
                 setGroups(groups);
             } catch (error) {
                 console.error(error);
@@ -62,8 +66,19 @@ const Sidebar = () => {
         loadGroups();
     }, [])
 
-    //Placeholder
-    const testArr = Array.from({ length: 40 }, (v, i) => i);
+    async function loadGroup(groups: Group) {
+        try {
+            setShowGroupsLoadingError(false);
+            setGroupsLoading(true);
+            const group = await GroupsApi.fetchGroup(groups._id, user.token);
+            setCurrentContent(group);
+        } catch (error) {
+            console.error(error);
+            setShowGroupsLoadingError(true);
+        } finally {
+            setGroupsLoading(false);
+        }
+    }
 
     return (
         <Box maxHeight="100%" display="flex" flexDirection="column">
@@ -82,7 +97,7 @@ const Sidebar = () => {
                     disableRipple
                     divider
                     selected={selectedIndex === 0}
-                    onClick={(event) => handleListItemClick(event, 0)}
+                    onClick={(event) => { handleListItemClick(event, 0); setCurrentContent(null); }}
                 >
                     <ListItemIcon>
                         <StickyNote2Icon />
@@ -121,7 +136,7 @@ const Sidebar = () => {
                             disableRipple
                             divider
                             selected={selectedIndex === 2 + index}
-                            onClick={(event) => handleListItemClick(event, 2 + index)}
+                            onClick={(event) => { handleListItemClick(event, 2 + index); loadGroup(group); }}
                         >
                             <ListItemAvatar>
                                 <Avatar alt={group.name} src="/" sx={{ width: 30, height: 30 }} />
