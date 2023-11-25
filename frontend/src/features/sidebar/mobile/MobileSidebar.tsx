@@ -1,9 +1,12 @@
 import React from "react";
 import { ToggleButtonGroup, ToggleButton, styled } from '@mui/material';
+import { Group } from "../../../models/group";
 
 interface MobileSidebarProps {
     alignment: string,
+    currentContent: Group | null,
     setAlignment: (alignment: string) => void,
+    setCurrentContent: React.Dispatch<React.SetStateAction<Group | null>>,
 }
 
 const StyledTogleGroup = styled(ToggleButtonGroup)(({ theme }) => ({
@@ -14,7 +17,7 @@ const StyledTogleGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     },
 }));
 
-const MobileSidebar = ({ alignment, setAlignment }: MobileSidebarProps) => {
+const MobileSidebar = ({ alignment, currentContent, setAlignment, setCurrentContent }: MobileSidebarProps) => {
 
     const handleChange = (
         event: React.MouseEvent<HTMLElement>,
@@ -32,6 +35,9 @@ const MobileSidebar = ({ alignment, setAlignment }: MobileSidebarProps) => {
             size="small"
         >
             <ToggleButton value="myNotes" disableRipple onClick={handleChange}>My Notes</ToggleButton>
+            {currentContent &&
+                <ToggleButton value="groupSettings" disableRipple onClick={handleChange}>Manage Group</ToggleButton>
+            }
             <ToggleButton value="groups" disableRipple onClick={handleChange}>Groups</ToggleButton>
         </StyledTogleGroup>
     );

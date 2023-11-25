@@ -10,11 +10,12 @@ interface ProfileMenuProps {
     isMenuOpen: boolean,
     handleMenuClose: () => void,
     onLogoutClick: () => Promise<void>,
+    onSettingsClick: () => void,
     [x: string]: unknown,
     children?: React.ReactNode
 }
 
-const ProfileMenu = ({ anchorEl, isMenuOpen, handleMenuClose, onLogoutClick, ...props }: ProfileMenuProps) => {
+const ProfileMenu = ({ anchorEl, isMenuOpen, handleMenuClose, onLogoutClick, onSettingsClick, ...props }: ProfileMenuProps) => {
     const user = useAppSelector((state) => state.auth.user);
 
     return (
@@ -43,7 +44,7 @@ const ProfileMenu = ({ anchorEl, isMenuOpen, handleMenuClose, onLogoutClick, ...
                         </ListItemIcon>
                         Profile
                     </MenuItem>
-                    <MenuItem disableRipple onClick={handleMenuClose}>
+                    <MenuItem disableRipple onClick={onSettingsClick}>
                         <ListItemIcon>
                             <SettingsIcon />
                         </ListItemIcon>

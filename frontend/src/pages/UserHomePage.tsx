@@ -21,6 +21,7 @@ const UserHomePage = () => {
 
   const [currentContent, setCurrentContent] = useState<Group | null>(null);
   const [categoryContainer, setCategoryContainer] = useState<IUser | Group>(user);
+  const [categoryAlignment, setCategoryAlignment] = useState<string>(categoryContainer?.categories[0]);
 
   const navigate = useNavigate();
   const theme = useTheme<Theme>();
@@ -64,7 +65,7 @@ const UserHomePage = () => {
       >
         {smallScreen ?
           <Box sx={{ gridArea: "sidebar" }}>
-            <MobileSidebar alignment={alignment} setAlignment={setAlignment} />
+            <MobileSidebar alignment={alignment} setAlignment={setAlignment} currentContent={currentContent} setCurrentContent={setCurrentContent}/>
           </Box>
           :
           <Box
@@ -79,25 +80,25 @@ const UserHomePage = () => {
         {!currentContent ?
           <>
             <Box sx={{ minWidth: 0, gridArea: "options" }}>
-              <NoteOptions originalNotes={originalNotes} setOriginalNotes={setOriginalNotes} categoryContainer={categoryContainer} searchValue={searchValue} setCategoryContainer={setCategoryContainer} notes={notes} setNotes={setNotes} setSearchValue={setSearchValue} setCurrentContent={setCurrentContent} />
+              <NoteOptions categoryAlignment={categoryAlignment} setCategoryAlignment={setCategoryAlignment} originalNotes={originalNotes} setOriginalNotes={setOriginalNotes} categoryContainer={categoryContainer} searchValue={searchValue} setCategoryContainer={setCategoryContainer} notes={notes} setNotes={setNotes} setSearchValue={setSearchValue} setCurrentContent={setCurrentContent} />
             </Box>
             <Box sx={{ gridArea: "divider" }}>
               <Divider flexItem />
             </Box>
             <Box sx={{ gridArea: "main", overflowY: smallScreen ? "auto" : undefined }}>
-              <MainNotes categoryContainer={categoryContainer} setCategoryContainer={setCategoryContainer} notes={notes} searchValue={searchValue} setNotes={setNotes} setSearchValue={setSearchValue} />
+              <MainNotes categoryAlignment={categoryAlignment} categoryContainer={categoryContainer} setCategoryContainer={setCategoryContainer} notes={notes} searchValue={searchValue} setNotes={setNotes} setSearchValue={setSearchValue} originalNotes={originalNotes} setOriginalNotes={setOriginalNotes}/>
             </Box>
           </>
           :
           <>
             <Box sx={{ minWidth: 0, gridArea: "options" }}>
-              <NoteOptions originalNotes={originalNotes} setOriginalNotes={setOriginalNotes} categoryContainer={categoryContainer} searchValue={searchValue} setCategoryContainer={setCategoryContainer} notes={notes} setNotes={setNotes} setSearchValue={setSearchValue} currentContent={currentContent} setCurrentContent={setCurrentContent} />
+              <NoteOptions categoryAlignment={categoryAlignment} setCategoryAlignment={setCategoryAlignment} originalNotes={originalNotes} setOriginalNotes={setOriginalNotes} categoryContainer={categoryContainer} searchValue={searchValue} setCategoryContainer={setCategoryContainer} notes={notes} setNotes={setNotes} setSearchValue={setSearchValue} currentContent={currentContent} setCurrentContent={setCurrentContent} />
             </Box>
             <Box sx={{ gridArea: "divider" }}>
               <Divider flexItem />
             </Box>
             <Box sx={{ gridArea: "main", overflowY: smallScreen ? "auto" : undefined }}>
-              <MainNotes categoryContainer={categoryContainer} setCategoryContainer={setCategoryContainer} notes={notes} searchValue={searchValue} setNotes={setNotes} setSearchValue={setSearchValue} currentContent={currentContent} />
+              <MainNotes categoryAlignment={categoryAlignment} categoryContainer={categoryContainer} setCategoryContainer={setCategoryContainer} notes={notes} searchValue={searchValue} setNotes={setNotes} setSearchValue={setSearchValue} currentContent={currentContent} originalNotes={originalNotes} setOriginalNotes={setOriginalNotes}/>
             </Box>
           </>
         }

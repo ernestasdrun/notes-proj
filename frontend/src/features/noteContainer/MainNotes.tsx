@@ -15,16 +15,19 @@ import { Group } from "../../models/group";
 
 interface MainNotesProps {
   notes: Note[],
+  originalNotes: Note[],
   searchValue: string,
   currentContent?: Group,
   categoryContainer: IUser | Group,
+  categoryAlignment: string,
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>,
+  setOriginalNotes: React.Dispatch<React.SetStateAction<Note[]>>,
   setSearchValue: React.Dispatch<React.SetStateAction<string>>,
   setCategoryContainer: React.Dispatch<React.SetStateAction<IUser | Group>>
   ,
 }
 
-const MainNotes = ({ notes, searchValue, currentContent, categoryContainer, setNotes, setSearchValue, setCategoryContainer }: MainNotesProps) => {
+const MainNotes = ({ notes, originalNotes, searchValue, currentContent, categoryContainer, categoryAlignment, setNotes, setOriginalNotes, setSearchValue, setCategoryContainer }: MainNotesProps) => {
   const user = useAppSelector((state) => state.auth.user) as IUser;
 
   const smallScreen = useMediaQuery('(max-width:600px)');
@@ -106,7 +109,10 @@ const MainNotes = ({ notes, searchValue, currentContent, categoryContainer, setN
             open={showNoteDialog}
             onDismiss={() => setAddNoteDialog(false)}
             onNoteSaved={(newNote) => {
-              setNotes([...notes, newNote]);
+              if (categoryAlignment === newNote.category || "All" === newNote.category) {
+                setNotes([...notes, newNote]);
+              }
+              setOriginalNotes([...originalNotes, newNote]);
               setAddNoteDialog(false);
             }}
           />
@@ -117,7 +123,10 @@ const MainNotes = ({ notes, searchValue, currentContent, categoryContainer, setN
             noteToEdit={noteEdit}
             onDismiss={() => setNoteEdit(null)}
             onNoteSaved={(updatedNote) => {
-              setNotes(notes.map(existNote => existNote._id === updatedNote._id ? updatedNote : existNote));
+              if (categoryAlignment === updatedNote.category || "All" === updatedNote.category) {
+                setNotes(notes.map(existNote => existNote._id === updatedNote._id ? updatedNote : existNote));
+              }
+              setOriginalNotes(originalNotes.map(existNote => existNote._id === updatedNote._id ? updatedNote : existNote));
               setNoteEdit(null);
             }}
           />

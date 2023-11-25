@@ -14,7 +14,7 @@ interface SortByProps {
 }
 
 const SortButton = styled(Button)(({ theme }) => ({
-  padding: "0 1px 0 1px",
+  padding: "0 1px",
   minWidth: "90px",
   height: "37px",
   ":focus-visible": {

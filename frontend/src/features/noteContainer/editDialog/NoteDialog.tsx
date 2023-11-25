@@ -55,7 +55,7 @@ const NoteDialog = ({ open = true, noteToEdit, categoryContainer, onDismiss, onN
                     noteResponse = await NotesApi.createNote(input, user.token);
                 }
             }
-
+            
             onNoteSaved(noteResponse);
         } catch (error) {
             console.error(error);

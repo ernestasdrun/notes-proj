@@ -14,7 +14,11 @@ import ProfileMenu from "./menu/ProfileMenu";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { logoutUser } from "../auth/authSlice";
 
-const Navbar = () => {
+interface NavbarProps {
+    position?: "fixed" | "absolute" | "relative" | "static" | "sticky" | undefined,
+}
+
+const Navbar = ({position}: NavbarProps) => {
     const user = useAppSelector((state) => state.auth.user);
 
     const theme = useTheme();
@@ -85,12 +89,17 @@ const Navbar = () => {
         }
     }
 
+    const onSettingsClick = () => {
+        navigate("/profile");
+    }
+
     const renderMenu = (
         <ProfileMenu
             anchorEl={anchorEl}
             isMenuOpen={isMenuOpen}
             handleMenuClose={handleMenuClose}
             onLogoutClick={onLogoutClick}
+            onSettingsClick={onSettingsClick}
         />
     );
 
@@ -100,6 +109,7 @@ const Navbar = () => {
             isMenuOpen={isMobileMenuOpen}
             handleMenuClose={handleMenuClose}
             onLogoutClick={onLogoutClick}
+            onSettingsClick={onSettingsClick}
         >
             <MenuItem disableRipple onClick={() => window.open("https://github.com/ernestasdrun/notes-proj", "_blank")}>
                 <ListItemIcon>
@@ -129,7 +139,7 @@ const Navbar = () => {
 
     return (
         <Box>
-            <AppBar color="primary" enableColorOnDark={true} position="sticky">
+            <AppBar color="primary" enableColorOnDark={true} position={position || "sticky"}>
                 <Toolbar variant="regular">
                     <Typography variant="h3" onClick={() => navigate("/")} sx={{ cursor: "pointer" }}>ClassicNotes</Typography>
                     <Box sx={{ flexGrow: 1 }} />

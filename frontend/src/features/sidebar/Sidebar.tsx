@@ -22,7 +22,7 @@ const StyledListButton = styled(ListItemButton)(({ theme }) => ({
             backgroundColor: theme.palette.mode === "dark" ? "#202020" : "#b2d8a6",
             borderLeft: `3px solid ${theme.palette.border.colored}`,
             borderRadius: "5px 0 0 5px",
-            paddingLeft: "13px"
+            paddingLeft: "13px",
         },
         ":hover": {
             backgroundColor: theme.palette.mode === "dark" ? "#1a1a1a" : "#97c28a",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, ButtonGroup, IconButton, ListItemText, Menu, MenuItem } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
@@ -22,7 +22,7 @@ interface CategoryButtonMobileProps {
   categoryContainer: IUser | Group,
   setCurrentContent: React.Dispatch<React.SetStateAction<Group | null>>,
   setNewCategoryDialog: React.Dispatch<React.SetStateAction<boolean>>,
-  handleChangeAndFilter: (event: React.MouseEvent<HTMLElement>, newValue: string) => void,
+  handleChangeAndFilter: (newValue: string) => void,
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>,
   setOriginalNotes: React.Dispatch<React.SetStateAction<Note[]>>,
   setCategoryContainer: React.Dispatch<React.SetStateAction<IUser | Group>>,
@@ -49,8 +49,8 @@ const CategoryButtonMobile = ({ value, notes, originalNotes, currentContent, cat
     setAnchorEl(null);
   };
 
-  const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, newValue: string) => {
-    handleChangeAndFilter(event, newValue);
+  const handleMenuItemClick = (newValue: string) => {
+    handleChangeAndFilter(newValue);
     handleClose();
   }
 
@@ -58,7 +58,7 @@ const CategoryButtonMobile = ({ value, notes, originalNotes, currentContent, cat
     note.category = "All";
     return note;
   }
-  
+
   async function deleteCategory(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, category: string) {
     event.stopPropagation();
     let newCategories: User | Group;
@@ -85,7 +85,13 @@ const CategoryButtonMobile = ({ value, notes, originalNotes, currentContent, cat
         size="small"
         sx={{ height: "37px" }}
       >
-        <Button variant="outlined" onClick={handleClick}>{value} {anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</Button>
+        <Button
+          variant="outlined"
+          onClick={handleClick}
+          sx={{ paddingX: "1.2rem"}}
+        >
+          {value} {anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+        </Button>
         <Button variant="outlined" onClick={() => setNewCategoryDialog(true)} sx={{ padding: 0 }}>
           <AddIcon fontSize="small" />
         </Button>
@@ -99,7 +105,7 @@ const CategoryButtonMobile = ({ value, notes, originalNotes, currentContent, cat
         }}
       >
         {categoryContainer && categoryContainer.categories.map((category, index) => (
-          <MenuItem key={index} disableRipple onClick={(e) => handleMenuItemClick(e, category)} >
+          <MenuItem key={index} disableRipple onClick={() => handleMenuItemClick(category)} >
             <ListItemText>{category}</ListItemText>
             {index != 0 &&
               <IconButton disableRipple onClick={(e) => deleteCategory(e, category)} sx={{ padding: "1px", marginLeft: 2, ":hover": { color: "#972323" } }}>
