@@ -1,11 +1,11 @@
-import { styled } from '@mui/system';
 import React from 'react';
+import { styled } from '@mui/system';
 import { Link } from 'react-router-dom';
 
 interface NavLinkProps {
-    title: string,
-    to: string,
-    text: string,
+  title: string,
+  to: string,
+  text: string,
 }
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -18,19 +18,19 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
   ":focus-visible": {
     outline: `3px solid ${theme.palette.border.main}`,
-},
-}))
+  },
+}));
 
-const NavigationLink = ({ title, to, text, ...props}: NavLinkProps) => {
+const NavigationLink = ({ title, to, text, ...props }: NavLinkProps) => {
   return (
     <StyledLink
-        {...props}
-        aria-label={title}
-        to={to}
+      {...props}
+      aria-label={title}
+      to={to}
     >
-        {text}
+      {text}
     </StyledLink>
-  )
-}
+  );
+};
 
 export default NavigationLink;

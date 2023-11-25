@@ -2,16 +2,22 @@ import { RequestHandler } from "express";
 import createHttpError from "http-errors";
 import UserModel from "../models/user";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import env from "../util/validateEnv";
+import { AuthRequest } from "../middleware/auth";
+import { assertIsDefined } from "../util/assertIsDefined";
+import NoteModel from "../models/note";
 
-export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
-    const authenticatedUser = req.session.userId;
+export interface UserReq {
+    userId: string,
+    username: string,
+}
 
+export const getAuthenticatedUser: RequestHandler = async (req: AuthRequest, res, next) => {
+    const { userId } = <UserReq>req.user;
     try {
-        if (!authenticatedUser) {
-            throw createHttpError(401, "User not authenticated");
-        }
-
-        const user = await UserModel.findById(authenticatedUser).select("+email").exec();
+        if (!userId) throw createHttpError(400, "error")
+        const user = await UserModel.findById(userId).select(["+email", "-__v", "-createdAt", "-updatedAt"]).exec();
         res.status(200).json(user);
     } catch (error) {
         next(error);
@@ -52,11 +58,20 @@ export const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = asy
             userName: username,
             email: email,
             password: passwordHashed,
+            categories: ["All"],
         });
 
-        req.session.userId = newUser._id;
+        const token = jwt.sign({
+            userId: newUser._id,
+            username: newUser.userName,
+        }, env.ACCESS_TOKEN_SECRET, { expiresIn: "1d" });
 
-        res.status(201).json(newUser);
+        res.status(201).json({
+            "userId": newUser._id,
+            "username": newUser.userName,
+            "token": token,
+            "categories": newUser.categories,
+        });
     } catch (error) {
         next(error);
     }
@@ -88,20 +103,79 @@ export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async
             throw createHttpError(401, "Invalid credentials");
         }
 
-        req.session.userId = user._id;
-        res.status(201).json(user);
+        const token = jwt.sign({
+            userId: user._id,
+            username: user.userName,
+        }, env.ACCESS_TOKEN_SECRET, { expiresIn: "1d" });
+
+        res.status(201).json({
+            "userId": user._id,
+            "username": user.userName,
+            "token": token,
+            "categories": user.categories,
+        });
     } catch (error) {
         next(error);
     }
 }
 
-export const logout: RequestHandler = async (req, res, next) => {
+export const addCategory: RequestHandler = async (req: AuthRequest, res, next) => {
+    const { userId } = <UserReq>req.user;
 
-    req.session.destroy(error => {
-        if (error) {
-            next(error);
-        } else {
-            res.sendStatus(200);
+    const category = req.body.name;
+
+    try {
+        assertIsDefined(userId);
+
+        if (!category) {
+            throw createHttpError(400, "Category must have a name");
         }
-    });
+
+        const user = await UserModel.findById(userId).exec();
+
+        if (!user) {
+            throw createHttpError(404, "User does not exist");
+        }
+
+        if (user.categories.length >= 10) {
+            throw createHttpError(401, "User has maximum amount of categories created");
+        }
+
+        const updatedUser = await UserModel.findByIdAndUpdate({ _id: userId }, { $push: { categories: category } }, { new: true }).select(["-groups", "-createdAt", "-updatedAt", "-__v"]);
+        res.status(200).json(updatedUser);
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const removeCategory: RequestHandler = async (req: AuthRequest, res, next) => {
+    const { userId } = <UserReq>req.user;
+    const category = req.body.name;
+
+    try {
+        assertIsDefined(userId);
+
+        const user = await UserModel.findOne({_id: userId}).exec();
+
+        if (!user) {
+            throw createHttpError(404, "User not found");
+        }
+
+        if (category === "All") {
+            throw createHttpError(401, "Cannot remove main category");
+        }
+
+        if (!user.categories.includes(category)) {
+            throw createHttpError(401, "User does not have this category");
+        }
+
+        const updatedNotes = await NoteModel.updateMany({userId: userId, groupId: null, category: category}, {$set: {category: "All"}});
+        const updatedUser = await UserModel.findOneAndUpdate({ _id: userId }, { $pull: { categories: category } }, { new: true }).exec();
+
+        res.status(200).json(updatedUser);
+
+    } catch (error) {
+        next(error);
+    }
 }
